@@ -2,6 +2,8 @@ require("dotenv").config()
 const express = require("express")
 const { PrismaClient } = require("./generated/prisma")
 const prisma = new PrismaClient();
+const bcrypt = require("bcryptjs");
+const jwt = require('jsonwebtoken');
 // con esta configuracion de prisma se comunoca con nuestra base de datos 
 const bodyParser = require("body-parser")
 
@@ -14,8 +16,6 @@ const app = express();
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(LoggerMiddleware)
-app.use(ErrorHandler)
-app.use(authenticateToken)
 
 
 const fs = require("fs");
@@ -46,16 +46,6 @@ app.get("/search", (req, res) => {
         <p>Termino: ${terms}</p>
         <p>Categoria: ${category}</p>
         `)
-})
-
-app.post("/login", (req, res) => {
-    const usuario = req.body.usuario
-    const contraseña = req.body.contraseña
-
-    res.json({
-        message: "Login recibido",
-        data: usuario
-    })
 })
 
 app.post("/form", (req, res) => {
@@ -185,6 +175,56 @@ app.get("/db-users" , async (req, res) => { //usamos async porqure necesario por
 app.get("/protected-route", authenticateToken, (req, res) => {
     res.send("Esta es una ruta protegida")
 })
+
+app.post('/register', async (req, res) => {
+
+  const { email, password, name } = req.body;
+  
+  const hashedPassword = await bcrypt.hash(password, 10);
+  
+  const newUser = await prisma.user.create({
+    data: {
+      email,
+      password: hashedPassword,
+      name,
+      role: "USER"
+    }
+  });
+  
+  res.status(201).json({ message: 'User registered successfully' });
+});
+
+app.post('/login', async (req, res) => {
+
+    console.log("HEADERS:", req.headers);
+    console.log("BODY:", req.body);
+
+  const { email, password } = req.body;
+  
+  const user = await prisma.user.findUnique({
+    where: { email }
+  });
+  
+  if (!user) {
+    return res.status(400).json({ error: "Invalid email or password" });
+  }
+  
+  const validPassword = await bcrypt.compare(password, user.password);
+  
+  if (!validPassword) {
+    return res.status(400).json({ error: "Invalid email or password" });
+  }
+  
+  const token = jwt.sign(
+    { id: user.id, role: user.role },
+    process.env.JWT_SECRET,
+    { expiresIn: '4h' }
+  );
+  
+  res.json({ token });
+});
+
+app.use(ErrorHandler)
 
 app.listen(PORT, () => {
     console.log("Servidor corriendo")
