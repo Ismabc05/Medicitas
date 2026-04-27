@@ -42,7 +42,7 @@ app.get("/search", (req, res) => {
     const terms = req.query.termino || "No especificado" 
     const category = req.query.categoria || "Todas"
     res.send(`
-        <h2>Resultados de busqueda</h2>
+        <h2>Resultados de busquea</h2>
         <p>Termino: ${terms}</p>
         <p>Categoria: ${category}</p>
         `)
