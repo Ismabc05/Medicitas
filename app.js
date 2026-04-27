@@ -2,7 +2,8 @@ require("dotenv").config()
 const express = require("express")
 const { PrismaClient } = require("./generated/prisma")
 const prisma = new PrismaClient();
-// con esta configuracion de prisma se comunoca con nuestra base de datos 
+const bcrypt = require("bcryptjs") 
+const jwt = require("jsonwebtoken")
 const bodyParser = require("body-parser")
 
 const LoggerMiddleware = require("./middlewares/logger")
@@ -15,7 +16,6 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(LoggerMiddleware)
 app.use(ErrorHandler)
-app.use(authenticateToken)
 
 
 const fs = require("fs");
@@ -173,7 +173,7 @@ app.get("/error", (req, res, next) => {
     next(new Error("Error intecionado"))
 });
 
-app.get("/db-users" , async (req, res) => { //usamos async porqure necesario porque la consulta a la base de datos es asíncrona.
+app.get("/db-users" , async (req, res) => {
     try {
         const users = await prisma.user.findMany() // obtengo todos los registros de mi tabla user
         res.json(users)
@@ -184,6 +184,22 @@ app.get("/db-users" , async (req, res) => { //usamos async porqure necesario por
 
 app.get("/protected-route", authenticateToken, (req, res) => {
     res.send("Esta es una ruta protegida")
+})
+
+app.post("/register", async (req, res) => {
+    const { email, password, name } = req.body
+    const hashPassword = await bcrypt.hash(password, 10) // encriptamos la contraseña
+
+    const newUser = await prisma.user.create({
+        data: {
+            email,
+            password: hashPassword,
+            name,
+            role: "USER"
+        }
+    });
+
+    res.status(201).json({message: "User  Register Successfully"})
 })
 
 app.listen(PORT, () => {
