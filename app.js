@@ -7,7 +7,7 @@ const bodyParser = require("body-parser")
 
 const LoggerMiddleware = require("./middlewares/logger")
 const ErrorHandler = require("./middlewares/errorHandler")
-const errorHandler = require("./middlewares/errorHandler")
+const authenticateToken = require("./middlewares/auth")
 const { validateUser } = require("./utils/regex");
 
 const app = express();
@@ -15,6 +15,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(LoggerMiddleware)
 app.use(ErrorHandler)
+app.use(authenticateToken)
 
 
 const fs = require("fs");
@@ -179,6 +180,10 @@ app.get("/db-users" , async (req, res) => { //usamos async porqure necesario por
     } catch (error) {
         res.status(500).json({error: "Error al comunicarse con la base de datos"})
     }
+})
+
+app.get("/protected-route", authenticateToken, (req, res) => {
+    res.send("Esta es una ruta protegida")
 })
 
 app.listen(PORT, () => {
