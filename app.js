@@ -42,7 +42,7 @@ app.get("/search", (req, res) => {
     const terms = req.query.termino || "No especificado" 
     const category = req.query.categoria || "Todas"
     res.send(`
-        <h2>Resultados de busquea</h2>
+        <h2>Resultados de busqueda</h2>
         <p>Termino: ${terms}</p>
         <p>Categoria: ${category}</p>
         `)
@@ -163,7 +163,7 @@ app.get("/error", (req, res, next) => {
     next(new Error("Error intecionado"))
 });
 
-app.get("/db-users" , async (req, res) => { //usamos async porqure necesario porque la consulta a la base de datos es asíncrona.
+app.get("/db-users" , async (req, res) => {
     try {
         const users = await prisma.user.findMany() // obtengo todos los registros de mi tabla user
         res.json(users)
@@ -195,9 +195,6 @@ app.post('/register', async (req, res) => {
 });
 
 app.post('/login', async (req, res) => {
-
-    console.log("HEADERS:", req.headers);
-    console.log("BODY:", req.body);
 
   const { email, password } = req.body;
   

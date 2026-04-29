@@ -11,7 +11,7 @@ function isValidForCreate(id, users) {
     return typeof id === "number" && !users.some(user => user.id === id)
 }
 
-function isValidIdForUpdate(id, users) {
+function isValidForUpdate(id, users) {
   return typeof id === "number" && users.some(user => user.id === id);
 }
 
@@ -48,6 +48,6 @@ module.exports = {
     isValidEmail,
     isValidName,
     isValidForCreate,
-    isValidIdForUpdate,
+    isValidForUpdate,
     validateUser
 }
