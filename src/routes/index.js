@@ -3,9 +3,11 @@
 
 const { Router } = require("express")
 const authRouter = require("./auth")
+const adminRouter = require("./admin")
 
 const router = Router();
 
 router.use("/auth", authRouter) // dentro de /auth tenemos las rutas que pertenecen a ese grupo
+router.use("/admin", adminRouter)
 
 module.exports = router
