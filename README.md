@@ -47,13 +47,7 @@ Durante este curso aprendí a construir aplicaciones backend utilizando ExpressJ
 Clona este repositorio:
 
 ```bash id="k0q1nv"
-git clone TU-URL-DEL-REPOSITORIO
-```
-
-Ingresa a la carpeta del proyecto:
-
-```bash id="6uvjcv"
-cd backend-expressjs
+git clone https://github.com/Ismabc05/curso-expressjs.git
 ```
 
 Instala las dependencias:
