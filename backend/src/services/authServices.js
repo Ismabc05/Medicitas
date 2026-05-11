@@ -1,7 +1,7 @@
 // En la carpeta services se encuentra la lógica de negocio de la aplicación, que es utilizada por los controladores para procesar los datos y construir la respuesta al cliente
 const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken');
-const { PrismaClient } = require("../../generated/prisma")
+const { PrismaClient } = require("../../../generated/prisma")
 const prisma = new PrismaClient();
 
 const registerUser = async (email, password, name) => {
