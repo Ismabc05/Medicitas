@@ -176,8 +176,9 @@ const handleSubmit = async (event) => {
 
           {error && <p className="error-text">{error}</p>}
 
-          <p className="register-footer" onClick={handleToLogin}>
-            ¿Ya tienes una cuenta? <a href="#">Inicia sesión</a>
+          <p className="register-footer">
+            ¿Ya tienes una cuenta?{" "}
+            <span className="register-footer" onClick={handleToLogin}>Inicia sesión</span>
           </p>
         </form>
       </div>

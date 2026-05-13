@@ -138,10 +138,11 @@
   color: #4b5563;
 }
 
-.register-footer a {
+.register-footer span {
   color: #6b7cff;
   text-decoration: none;
   font-weight: 600;
+  cursor: pointer;
 }
 
 .error-text {
@@ -150,7 +151,7 @@
   margin-top: 5px;
 }
 
-.register-footer a:hover {
+.register-footer span:hover {
   text-decoration: underline;
 }
 
