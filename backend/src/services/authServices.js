@@ -25,13 +25,13 @@ const loginUser = async (email, password) => {
     })
 
     if (!user) {
-        throw new Error("Invalid email or password")
+        throw new Error("Usuario o contraseña incorrectos")
     }
       
     const validPassword = await bcrypt.compare(password, user.password);
       
     if (!validPassword) {
-       throw new Error("Invalid email or password")
+       throw new Error("Usuario o contraseña incorrectos")
     }
 
     const token = jwt.sign(
