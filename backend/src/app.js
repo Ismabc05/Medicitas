@@ -7,12 +7,7 @@ const loggerMiddleware = require("./middlewares/logger")
 const errorMiddleware = require("./middlewares/errorHandler")
 const app = express()
 
-app.use(cors({
-  origin: ["http://127.0.0.1:5173", "http://localhost:5173"],
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  credentials: true
-}));
-
+app.use(cors());
 app.use(express.json())
 app.use(loggerMiddleware)
 app.use("/api", routes) // las rutas serian /api/...
