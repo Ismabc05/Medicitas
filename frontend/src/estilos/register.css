@@ -144,6 +144,12 @@
   font-weight: 600;
 }
 
+.error-text {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
 .register-footer a:hover {
   text-decoration: underline;
 }
