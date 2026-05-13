@@ -5,25 +5,18 @@ const { PrismaClient } = require("../../../generated/prisma")
 const prisma = new PrismaClient();
 
 const registerUser = async (email, password, name) => {
-  try {
-    const user = await prisma.user.create({
-      data: {
-        email,
-        password,
-        name
-      }
+    const hashedPassword = await bcrypt.hash(password, 10)
+    const newUser = await prisma.user.create({
+        data: {
+            email,
+            password: hashedPassword,
+            name,
+            role: "USER"
+        }
     });
 
-    return user;
-  } catch (error) {
-    // 👇 ESTE ES EL ERROR DE EMAIL DUPLICADO
-    if (error.code === "P2002") {
-      throw new Error("El email ya está registrado");
-    }
-
-    throw new Error("Error al crear usuario");
-  }
-};
+    return newUser;
+}
 
 
 const loginUser = async (email, password) => {
