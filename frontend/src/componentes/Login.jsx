@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import "../estilos/login.css";
 import { useNavigate } from "react-router-dom";
+import { validateLogin } from "../utils/validateLogin";
 
 export default function Login() {
 
   const navegar = useNavigate()
   const [error, setError] = useState("")
+  const [errors, setErrors] = useState({});
   const [form, setForm ] = useState({
     email: "",
     password: ""
@@ -22,12 +24,25 @@ export default function Login() {
       [event.target.id]: event.target.value
     })
 
-    setError("")
+    setErrors((prev) => ({
+      ...prev,
+      [event.target.id]: ""
+    }));
 
   }
 
   const handleToLogin = async (event) => {
     event.preventDefault()
+
+    const validationErrors = validateLogin(form);
+    
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+    
+    setErrors({});
+    setError("");
 
     try {
       const response = await fetch(
@@ -89,6 +104,7 @@ export default function Login() {
               placeholder="Ingresa tu email"
               onChange={handleChange}
             />
+            {errors.email && <p className="error-text">{errors.email}</p>}
           </div>
 
           <div className="login-field">
@@ -100,6 +116,7 @@ export default function Login() {
               placeholder="Ingresa tu contraseña..."
               onChange={handleChange}
             />
+            {errors.password && (<p className="error-text">{errors.password}</p>)}
           </div>
 
           <button type="submit" className="login-button">

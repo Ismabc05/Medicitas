@@ -38,7 +38,7 @@ export default function Register() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const validationErrors = validateRegister();
+    const validationErrors = validateRegister(form);
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
