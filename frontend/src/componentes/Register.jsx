@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "../estilos/register.css";
 import { useNavigate } from "react-router-dom";
+import { validateRegister } from "../utils/validateRegister";
 
 export default function Register() {
   const navegar = useNavigate();
@@ -34,82 +35,54 @@ export default function Register() {
     }));
   };
 
-  const validate = () => {
-    const newErrors = {};
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-    if (!form.name.trim()) {
-      newErrors.name = "El nombre es obligatorio";
-    }
+    const validationErrors = validateRegister();
 
-    if (!form.email.trim()) {
-      newErrors.email = "El email es obligatorio";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-      newErrors.email = "El email no es válido";
-    }
-
-    if (!form.password) {
-      newErrors.password = "La contraseña es obligatoria";
-    } else if (form.password.length < 6) {
-      newErrors.password = "Mínimo 6 caracteres";
-    }
-
-    if (!form.confirmPassword) {
-      newErrors.confirmPassword = "Confirma tu contraseña";
-    } else if (form.password !== form.confirmPassword) {
-      newErrors.confirmPassword = "Las contraseñas no coinciden";
-    }
-
-    return newErrors;
-  };
-
-const handleSubmit = async (event) => {
-  event.preventDefault();
-
-  const validationErrors = validate();
-
-  if (Object.keys(validationErrors).length > 0) {
-    setErrors(validationErrors);
-    return;
-  }
-
-  setErrors({});
-  setError("");
-
-  try {
-    const response = await fetch(
-      "https://curso-expressjs-production-a8af.up.railway.app/api/auth/register",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          name: form.name,
-          email: form.email,
-          password: form.password
-        })
-      }
-    );
-
-    const data = await response.json();
-
-    // ❌ SI EL BACKEND DEVUELVE ERROR (email ya existe, etc.)
-    if (!response.ok) {
-      setError(data.error || "Error al registrar usuario.");
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
       return;
     }
 
-    // ✅ TODO OK → redirigir
-    setSuccess("Usuario creado correctamente.");
+    setErrors({});
+    setError("");
 
-    setTimeout(() => {
-      navegar("/");
-    }, 1500);
+    try {
+      const response = await fetch(
+        "https://curso-expressjs-production-a8af.up.railway.app/api/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            name: form.name,
+            email: form.email,
+            password: form.password
+          })
+        }
+      );
 
-  } catch (err) {
-    setError("Error de conexión con el servidor.");
-  }
-};
+      const data = await response.json();
+
+    
+      if (!response.ok) {
+        setError(data.error || "Error al registrar usuario.");
+        return;
+      }
+
+    
+      setSuccess("Usuario creado correctamente.");
+
+      setTimeout(() => {
+        navegar("/");
+      }, 1500);
+
+    } catch (err) {
+      setError("Error de conexión con el servidor.");
+    }
+  };
 
   return (
     <div className="register-page">
