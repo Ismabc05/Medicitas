@@ -7,6 +7,7 @@ export default function Register() {
 
   const [error, setError] = useState("");
   const [errors, setErrors] = useState({});
+  const [success, setSuccess] = useState("");
 
   const [form, setForm] = useState({
     name: "",
@@ -94,15 +95,19 @@ const handleSubmit = async (event) => {
 
     // ❌ SI EL BACKEND DEVUELVE ERROR (email ya existe, etc.)
     if (!response.ok) {
-      setError(data.error || "Error al registrar usuario");
+      setError(data.error || "Error al registrar usuario.");
       return;
     }
 
     // ✅ TODO OK → redirigir
-    navegar("/");
+    setSuccess("Usuario creado correctamente.");
+
+    setTimeout(() => {
+      navegar("/");
+    }, 1500);
 
   } catch (err) {
-    setError("Error de conexión con el servidor");
+    setError("Error de conexión con el servidor.");
   }
 };
 
@@ -175,6 +180,7 @@ const handleSubmit = async (event) => {
           </button>
 
           {error && <p className="error-text">{error}</p>}
+          {success && <p className="success-text">{success}</p>}
 
           <p className="register-footer">
             ¿Ya tienes una cuenta?{" "}
