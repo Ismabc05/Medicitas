@@ -40,7 +40,7 @@ const loginUser = async (email, password) => {
         { expiresIn: '4h' }
     );
 
-    return token
+    return { token, user }
 
 }
 
