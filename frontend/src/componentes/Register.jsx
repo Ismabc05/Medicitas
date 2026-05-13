@@ -32,7 +32,7 @@ export default function Register() {
         return;
       }
 
-      await fetch("https://curso-expressjs-production-8a8f.up.railway.app/api/auth/register", {
+      await fetch("https://curso-expressjs-production-a8af.up.railway.app/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
