@@ -15,7 +15,7 @@ const createTimeBlockService = async (startTime, endTime) => {
 const listTimeBlocksService = async () => {
     const timeblocks = await prisma.timeBlock.findMany({
         orderBy: {
-            date: "asc"
+            startTime: "asc"
         }
     })
     return timeblocks
