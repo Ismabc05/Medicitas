@@ -12,6 +12,32 @@ const createTimeBlockService = async (startTime, endTime) => {
     return newBlockTime
 }
 
+const listTimeBlocksService = async () => {
+    const timeblocks = await prisma.timeBlock.findMany({
+        orderBy: {
+            date: "asc"
+        }
+    })
+    return timeblocks
+}
+
+const updateTimeBlockService = async (id, data) => {
+  return await prisma.timeBlock.update({
+    where: {
+      id: parseInt(id),
+    },
+    data,
+  });
+};
+
+const deleteTimeBlocksServices = async (id) => {
+    const deleted = await prisma.timeBlock.delete({
+            where: {id: parseInt(id)}
+    })
+
+    return deleted
+}
+
 const listReservationService = async () => {
     const reservations = await prisma.appointment.findMany({
         include: {
@@ -23,4 +49,4 @@ const listReservationService = async () => {
     return reservations
 }
 
-module.exports = {createTimeBlockService, listReservationService}
+module.exports = {createTimeBlockService, listReservationService, listTimeBlocksService, updateTimeBlockService, deleteTimeBlocksServices}

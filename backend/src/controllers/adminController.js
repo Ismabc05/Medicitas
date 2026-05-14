@@ -1,4 +1,4 @@
-const { createTimeBlockService, listReservationService} = require("../services/adminServices")
+const { createTimeBlockService, listReservationService, listTimeBlocksService, updateTimeBlockService, deleteTimeBlocksServices } = require("../services/adminServices")
 
 const createTimeBlocks = async (req, res) => {
     if(req.user.role !== "ADMIN") {
@@ -16,6 +16,53 @@ const createTimeBlocks = async (req, res) => {
     }
 }
 
+const getTimeBlocks = async (req, res) => {
+    if(req.user.role !== "ADMIN") {
+        return res.status(403).json({error: "Access denied"})
+    }
+
+    try{
+        const timeblocks = await listTimeBlocksService()
+        return res.json(timeblocks)
+    } catch (error) {
+         return res.status(500).json({error: "Error Fetching Reservations"})
+    }
+}
+
+const updateTimeBlocks = async (req, res) => {
+    if(req.user.role !== "ADMIN") {
+        return res.status(403).json({error: "Access denied"})
+    }
+
+    try{
+        const { id } = req.params;
+        const { date, startTime, endTime } = req.body;
+
+        const updated = await updateTimeBlockService(id, {date, startTime, endTime})
+        return res.json(updated)
+
+    } catch (error) {
+        return res.status(500).json({ error: "Error updating time block" });
+    }
+
+
+}
+
+const deleteTimeBlocks = async (req, res) => {
+    if(req.user.role !== "ADMIN") {
+        return res.status(403).json({error: "Access denied"})
+    }
+
+    try {
+        const { id } = req.params;
+        const deleted = await deleteTimeBlocksServices(id);
+        return res.status(204).send()
+
+    } catch (error) {
+        return res.status(500).json({ error: "Error delete time block" });
+    }
+}
+
 
 const listReservations = async (req, res) => {
     if(req.user.role !== "ADMIN") {
@@ -30,4 +77,4 @@ const listReservations = async (req, res) => {
     }
 }
 
-module.exports = {createTimeBlocks, listReservations}
+module.exports = {createTimeBlocks, listReservations, getTimeBlocks, updateTimeBlocks, deleteTimeBlocks}

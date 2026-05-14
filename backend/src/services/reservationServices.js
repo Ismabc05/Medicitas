@@ -29,7 +29,7 @@ exports.getReservation = async ( id ) => {
 }
 
 exports.updateReservation = async (data, id ) => {
-    const conflict = await prisma.appointment.findFirst({
+    const conflict = await prisma.timeBlock.findFirst({
         where: {
             date: data.date,
             timeBlockId: data.timeBlockId,
