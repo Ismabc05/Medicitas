@@ -9,12 +9,13 @@ export default function Register() {
   const [error, setError] = useState("");
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
     name: "",
     email: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
 
   const handleToLogin = (event) => {
@@ -25,13 +26,12 @@ export default function Register() {
   const handleChange = (event) => {
     setForm({
       ...form,
-      [event.target.id]: event.target.value
+      [event.target.id]: event.target.value,
     });
 
-    // limpiar error del campo mientras escribe
     setErrors((prev) => ({
       ...prev,
-      [event.target.id]: ""
+      [event.target.id]: "",
     }));
   };
 
@@ -47,6 +47,8 @@ export default function Register() {
 
     setErrors({});
     setError("");
+    setSuccess("");
+    setLoading(true);
 
     try {
       const response = await fetch(
@@ -54,33 +56,33 @@ export default function Register() {
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             name: form.name,
             email: form.email,
-            password: form.password
-          })
+            password: form.password,
+          }),
         }
       );
 
       const data = await response.json();
 
-    
       if (!response.ok) {
         setError(data.error || "Error al registrar usuario.");
+        setLoading(false);
         return;
       }
 
-    
       setSuccess("Usuario creado correctamente.");
 
       setTimeout(() => {
+        setLoading(false);
         navegar("/");
-      }, 1500);
-
+      }, 2000);
     } catch (err) {
       setError("Error de conexión con el servidor.");
+      setLoading(false);
     }
   };
 
@@ -92,7 +94,6 @@ export default function Register() {
         <h1 className="register-title">Crear cuenta</h1>
 
         <form className="register-form" onSubmit={handleSubmit}>
-          {/* NAME */}
           <div className="register-field">
             <label htmlFor="name">Nombre completo:</label>
             <input
@@ -105,7 +106,6 @@ export default function Register() {
             {errors.name && <p className="error-text">{errors.name}</p>}
           </div>
 
-          {/* EMAIL */}
           <div className="register-field">
             <label htmlFor="email">Correo Electrónico:</label>
             <input
@@ -118,7 +118,6 @@ export default function Register() {
             {errors.email && <p className="error-text">{errors.email}</p>}
           </div>
 
-          {/* PASSWORD */}
           <div className="register-field">
             <label htmlFor="password">Contraseña:</label>
             <input
@@ -128,12 +127,9 @@ export default function Register() {
               placeholder="Crea tu contraseña"
               onChange={handleChange}
             />
-            {errors.password && (
-              <p className="error-text">{errors.password}</p>
-            )}
+            {errors.password && <p className="error-text">{errors.password}</p>}
           </div>
 
-          {/* CONFIRM PASSWORD */}
           <div className="register-field">
             <label htmlFor="confirmPassword">Confirmar contraseña:</label>
             <input
@@ -148,8 +144,8 @@ export default function Register() {
             )}
           </div>
 
-          <button type="submit" className="register-button">
-            Registrarse
+          <button type="submit" className="register-button" disabled={loading}>
+            {loading ? <span className="button-loader"></span> : "Registrarse"}
           </button>
 
           {error && <p className="error-text">{error}</p>}
@@ -157,7 +153,9 @@ export default function Register() {
 
           <p className="register-footer">
             ¿Ya tienes una cuenta?{" "}
-            <span className="register-footer" onClick={handleToLogin}>Inicia sesión</span>
+            <span className="register-footer-link" onClick={handleToLogin}>
+              Inicia sesión
+            </span>
           </p>
         </form>
       </div>

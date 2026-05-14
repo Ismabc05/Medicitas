@@ -1,4 +1,4 @@
-const validateRegister = () => {
+const validateRegister = (form) => {
     const newErrors = {};
 
     if (!form.name.trim()) {

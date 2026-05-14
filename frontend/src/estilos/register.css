@@ -162,6 +162,43 @@
   font-weight: 500;
 }
 
+.register-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.register-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.85;
+}
+
+.button-loader {
+  width: 18px;
+  height: 18px;
+  border: 3px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.register-footer-link {
+  color: #6b7cff;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.register-footer-link:hover {
+  text-decoration: underline;
+}
+
 @media (max-width: 480px) {
   .register-card {
     max-width: 100%;

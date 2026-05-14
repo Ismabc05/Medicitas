@@ -4,58 +4,58 @@ import { useNavigate } from "react-router-dom";
 import { validateLogin } from "../utils/validateLogin";
 
 export default function Login() {
-
-  const navegar = useNavigate()
-  const [error, setError] = useState("")
+  const navegar = useNavigate();
+  const [error, setError] = useState("");
   const [errors, setErrors] = useState({});
-  const [form, setForm ] = useState({
+  const [loading, setLoading] = useState(false);
+  const [form, setForm] = useState({
     email: "",
-    password: ""
-  })
+    password: "",
+  });
 
   const handleToRegister = (event) => {
-    event.preventDefault()
-    navegar("/register")
-  }
+    event.preventDefault();
+    navegar("/register");
+  };
 
   const handleChange = (event) => {
     setForm({
       ...form,
-      [event.target.id]: event.target.value
-    })
+      [event.target.id]: event.target.value,
+    });
 
     setErrors((prev) => ({
       ...prev,
-      [event.target.id]: ""
+      [event.target.id]: "",
     }));
-
-  }
+  };
 
   const handleToLogin = async (event) => {
-    event.preventDefault()
+    event.preventDefault();
 
     const validationErrors = validateLogin(form);
-    
+
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
-    
+
     setErrors({});
     setError("");
+    setLoading(true);
 
     try {
       const response = await fetch(
         "https://curso-expressjs-production-a8af.up.railway.app/api/auth/login",
         {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          email: form.email,
-          password: form.password
-        })
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: form.email,
+            password: form.password,
+          }),
         }
       );
 
@@ -63,21 +63,25 @@ export default function Login() {
 
       if (!response.ok) {
         setError(data.error || "Usuario o contraseña incorrectos");
+        setLoading(false);
         return;
       }
 
       localStorage.setItem("token", data.token);
 
-      if(data.user.role === "USER") {
-        navegar("/home")
-      } else {
-        navegar("/control-panel")
-      }
-      
+      setTimeout(() => {
+        if (data.user.role === "USER") {
+          navegar("/home");
+        } else {
+          navegar("/control-panel");
+        }
+        setLoading(false);
+      }, 2000);
     } catch (error) {
-      setError("Error de conexion con el servidor")
+      setError("Error de conexion con el servidor");
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="login-page">
@@ -116,18 +120,24 @@ export default function Login() {
               placeholder="Ingresa tu contraseña..."
               onChange={handleChange}
             />
-            {errors.password && (<p className="error-text">{errors.password}</p>)}
+            {errors.password && <p className="error-text">{errors.password}</p>}
           </div>
 
-          <button type="submit" className="login-button">
-            Ingresar
+          <button type="submit" className="login-button" disabled={loading}>
+            {loading ? (
+              <span className="button-loader"></span>
+            ) : (
+              "Ingresar"
+            )}
           </button>
 
           {error && <p className="error-text">{error}</p>}
 
           <p className="login-footer">
             ¿No tienes una cuenta?{" "}
-            <span className="login-footer" onClick={handleToRegister}>Regístrate aquí</span>
+            <span className="login-footer-link" onClick={handleToRegister}>
+              Regístrate aquí
+            </span>
           </p>
         </form>
       </div>
@@ -135,4 +145,4 @@ export default function Login() {
   );
 }
 
-export { Login }
+export { Login };
