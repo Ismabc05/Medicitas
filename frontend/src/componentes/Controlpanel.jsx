@@ -12,6 +12,7 @@ function Controlpanel() {
   endTime: ""
   });
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   useEffect(() => {
   const fetchReservations = async () => {
@@ -45,9 +46,6 @@ function Controlpanel() {
 
     fetchReservations();
   }, []);
-
-
-
 
   useEffect(() => {
   const fetchTimeblocks = async () => {
@@ -95,6 +93,11 @@ function Controlpanel() {
   try {
     const token = localStorage.getItem("token");
 
+    const payload = {
+      startTime: new Date(timeBlockForm.startTime).toISOString(),
+      endTime: new Date(timeBlockForm.endTime).toISOString(),
+    };
+
     const response = await fetch(
       "https://curso-expressjs-production-a8af.up.railway.app/api/admin/create-time-blocks",
       {
@@ -103,7 +106,7 @@ function Controlpanel() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(timeBlockForm),
+        body: JSON.stringify(payload),
       }
     );
 
@@ -114,21 +117,25 @@ function Controlpanel() {
       return;
     }
 
-    // agregar nuevo bloque al state
+    setSuccess("Timeblock creado con éxito ✅");
+
+
+    setTimeout(() => {
+      setSuccess("");
+    }, 3000);
+
     setTimeBlocks((prev) => [...prev, data]);
 
-    // limpiar formulario
     setTimeBlockForm({
       startTime: "",
       endTime: ""
     });
 
-    // cerrar formulario
     setShowForm(false);
 
-    } catch (error) {
-      setError("Error de conexión");
-    }
+  } catch (error) {
+    setError("Error de conexión");
+  }
   };
 
   return (
@@ -160,6 +167,7 @@ function Controlpanel() {
           <div className="cp-header-actions">
             <button className="cp-button secondary">Ver reservas</button>
             <button className="cp-button" onClick={() => setShowForm(!showForm)}>+ Nuevo timeblock </button>
+            {success && (<div className="success-message">{success}</div>)}
           </div>
         </header>
 

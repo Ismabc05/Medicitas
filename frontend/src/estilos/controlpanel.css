@@ -294,6 +294,15 @@
   background: #167f9b;
 }
 
+.success-message {
+  background: #d1fae5;
+  color: #065f46;
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
 @media (max-width: 1024px) {
   .cp-layout {
     grid-template-columns: 1fr;
