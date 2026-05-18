@@ -181,11 +181,49 @@
   border: 1px dashed #cbd5e1;
   border-radius: 14px;
   min-height: 180px;
-  display: grid;
-  place-items: center;
-  padding: 20px;
-  color: #64748b;
+  padding: 16px;
   background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: hidden;
+}
+
+.reservation-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-left: 5px solid #1f97b8;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+  display: grid;
+  gap: 8px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.reservation-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
+}
+
+.reservation-card p {
+  margin: 0;
+  color: #334155;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.reservation-card strong {
+  color: #0f172a;
+}
+
+.error-text {
+  color: #b91c1c;
+  font-weight: 600;
+}
+
+.parrafo-reservas {
+  text-align: center;
 }
 
 .cp-mini-actions {

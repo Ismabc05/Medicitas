@@ -1,7 +1,136 @@
-import React from "react";
 import "../estilos/controlpanel.css";
+import React, { useEffect, useState } from "react";
 
 function Controlpanel() {
+
+  const [reservations, setReservations] = useState([]);
+  const [timeblocks, setTimeBlocks] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [timeBlockForm, setTimeBlockForm] = useState({
+  startTime: "",
+  endTime: ""
+  });
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+  const fetchReservations = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(
+        "https://curso-expressjs-production-a8af.up.railway.app/api/admin/reservations",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || "Error al cargar reservas");
+        return;
+      }
+
+      setReservations(data);
+
+      } catch (error) {
+        setError("Error de conexión con el servidor");
+      }   finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReservations();
+  }, []);
+
+
+
+
+  useEffect(() => {
+  const fetchTimeblocks = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(
+        "https://curso-expressjs-production-a8af.up.railway.app/api/admin/time-blocks",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || "Error al cargar timeblocks");
+        return;
+      }
+
+      setTimeBlocks(data);
+
+      } catch (error) {
+        setError("Error de conexión con el servidor");
+      }   finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTimeblocks();
+  }, []);
+
+  const handleTimeBlockChange = (event) => {
+    setTimeBlockForm({
+      ...timeBlockForm,
+      [event.target.name]: event.target.value
+    });
+  };
+
+  const handleCreateTimeBlock = async (event) => {
+  event.preventDefault();
+
+  try {
+    const token = localStorage.getItem("token");
+
+    const response = await fetch(
+      "https://curso-expressjs-production-a8af.up.railway.app/api/admin/create-time-blocks",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(timeBlockForm),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      setError(data.error || "Error creando timeblock");
+      return;
+    }
+
+    // agregar nuevo bloque al state
+    setTimeBlocks((prev) => [...prev, data]);
+
+    // limpiar formulario
+    setTimeBlockForm({
+      startTime: "",
+      endTime: ""
+    });
+
+    // cerrar formulario
+    setShowForm(false);
+
+    } catch (error) {
+      setError("Error de conexión");
+    }
+  };
+
   return (
     <div className="cp-layout">
       <aside className="cp-sidebar">
@@ -30,24 +159,49 @@ function Controlpanel() {
 
           <div className="cp-header-actions">
             <button className="cp-button secondary">Ver reservas</button>
-            <button className="cp-button">+ Nuevo timeblock</button>
+            <button className="cp-button" onClick={() => setShowForm(!showForm)}>+ Nuevo timeblock </button>
           </div>
         </header>
+
+        {showForm && (
+          <form
+            className="timeblock-form"
+            onSubmit={handleCreateTimeBlock}
+          >
+            <input
+              type="datetime-local"
+              name="startTime"
+              value={timeBlockForm.startTime}
+              onChange={handleTimeBlockChange}
+            />
+
+            <input
+              type="datetime-local"
+              name="endTime"
+              value={timeBlockForm.endTime}
+              onChange={handleTimeBlockChange}
+            />
+
+            <button type="submit">
+              Crear
+            </button>
+          </form>
+        )}
 
         <section className="cp-cards">
           <article className="cp-card">
             <span>Total reservas</span>
-            <strong>--</strong>
+            <strong>{reservations.length}</strong>
           </article>
 
           <article className="cp-card">
             <span>Timeblocks activos</span>
-            <strong>--</strong>
+            <strong>{timeblocks.length}</strong>
           </article>
 
           <article className="cp-card">
             <span>Reservas pendientes</span>
-            <strong>--</strong>
+            <strong>0</strong>
           </article>
         </section>
 
@@ -59,7 +213,35 @@ function Controlpanel() {
             </div>
 
             <div className="cp-empty">
-              <p>Los datos de reservas aparecerán aquí.</p>
+              {loading ? (
+                <p className="parrafo-reservas">Cargando reservas...</p>
+              ) : error ? (
+                <p className="error-text">{error}</p>
+              ) : reservations.length === 0 ? (
+                <p>No hay reservas.</p>
+              ) : (
+                reservations.map((reservation) => (
+                  <div key={reservation.id} className="reservation-card">
+                  <p>
+                    <strong>Usuario:</strong> {reservation.user.name}
+                  </p>
+
+                  <p>
+                    <strong>Email:</strong> {reservation.user.email}
+                  </p>
+
+                  <p>
+                    <strong>Inicio:</strong>{" "}
+                    {new Date(reservation.timeBlock.startTime).toLocaleString()}
+                  </p>
+
+                  <p>
+                    <strong>Fin:</strong>{" "}
+                    {new Date(reservation.timeBlock.endTime).toLocaleString()}
+                  </p>
+                  </div>
+                ))
+              )}
             </div>
           </div>
 
@@ -70,7 +252,27 @@ function Controlpanel() {
             </div>
 
             <div className="cp-empty">
-              <p>Los timeblocks se mostrarán aquí.</p>
+              {loading ? (
+                <p className="parrafo-reservas">Cargando timeblocks...</p>
+              ) : error ? (
+                <p className="error-text">{error}</p>
+              ) : timeblocks.length === 0 ? (
+                <p>No hay timeblocks.</p>
+              ) : (
+                timeblocks.map((timeblock) => (
+                  <div key={timeblock.id} className="reservation-card">
+                  <p>
+                    <strong>Inicio:</strong>{" "}
+                    {new Date(timeblock.startTime).toLocaleString()}
+                  </p>
+
+                  <p>
+                    <strong>Fin:</strong>{" "}
+                    {new Date(timeblock.endTime).toLocaleString()}
+                  </p>
+                  </div>
+                ))
+              )}
             </div>
 
             <div className="cp-mini-actions">
