@@ -1,26 +1,24 @@
+// los controllers son funcion que devuelven la respuesta del servidor, qaue llaman a serivces para que le proporcionen esa respuesta
+
 const { createTimeBlockService, listReservationService, listTimeBlocksService, updateTimeBlockService, deleteTimeBlocksServices } = require("../services/adminServices")
 
 const createTimeBlocks = async (req, res) => {
-    if(req.user.role !== "ADMIN") {
+    if(req.user.role !== "ADMIN") { // validamos si el rol del usuario es admin
         return res.status(403).json({error: "Access denied"})
     }
 
-    const {startTime, endTime} = req.body
+    const {startTime, endTime} = req.body // del cuerpo de la peticion cojemos los valores
 
     try {
-        const newTimeBlock = await createTimeBlockService(startTime, endTime)
-        return res.status(201).json(newTimeBlock)
+        const newTimeBlock = await createTimeBlockService(startTime, endTime) // llamamos al servicio que se encarga de crear el bloque
+        return res.status(201).json(newTimeBlock) // y retornamos el bloque
 
-    } catch (error) {
+    } catch (error) { // y si sale error emviamos el error correspondiente
         return res.status(500).json({error: "Error creating time block" })
     }
 }
 
 const getTimeBlocks = async (req, res) => {
-    if(req.user.role !== "ADMIN") {
-        return res.status(403).json({error: "Access denied"})
-    }
-
     try{
         const timeblocks = await listTimeBlocksService()
         return res.json(timeblocks)

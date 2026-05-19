@@ -7,7 +7,7 @@ const register = async (req, res) => {
     try {
         const { email, password, name} = req.body
         await registerUser(email, password, name)
-        return res.status(201).json({message: "User registeres Succesfully"})
+        return res.status(201).json({message: "User registered Succesfully"})
     } catch (error) {
         return res.status(400).json({error: "El usuario ya existe"})
     }
@@ -16,7 +16,7 @@ const register = async (req, res) => {
 const login = async (req, res) => {
     try {
         const {email, password} = req.body
-         const { token, user } = await loginUser(email, password);
+        const { token, user } = await loginUser(email, password);
         return res.json({ token, user })
     } catch (error) {
         return res.status(400).json({error: error.message})

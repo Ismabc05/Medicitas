@@ -1,4 +1,4 @@
-// index.js en routes actúa como un punto central que agrupa y organiza todos los routers de la aplicación
+// index.js en routes actúa como un punto central que agrupa y organiza todos las rutas de la aplicación
 
 
 const { Router } = require("express")

@@ -13,7 +13,7 @@ exports.createReservation = async ( data ) => {
         throw new Error("El horario ya está ocupado")
     }
 
-    return prisma.appointment.create({data})
+    return prisma.appointment.create({data}) // creamos la reserva en la tabla appoiment
 }
 
 exports.getReservation = async ( id ) => {
