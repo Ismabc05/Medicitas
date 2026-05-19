@@ -167,7 +167,6 @@ function Controlpanel() {
           <div className="cp-header-actions">
             <button className="cp-button secondary">Ver reservas</button>
             <button className="cp-button" onClick={() => setShowForm(!showForm)}>+ Nuevo timeblock </button>
-            {success && (<div className="success-message">{success}</div>)}
           </div>
         </header>
 
@@ -195,6 +194,8 @@ function Controlpanel() {
             </button>
           </form>
         )}
+
+        {success && (<div className="success-message">{success}</div>)}
 
         <section className="cp-cards">
           <article className="cp-card">
@@ -284,8 +285,6 @@ function Controlpanel() {
             </div>
 
             <div className="cp-mini-actions">
-              <button>Editar</button>
-              <button>Eliminar</button>
             </div>
           </div>
         </section>
