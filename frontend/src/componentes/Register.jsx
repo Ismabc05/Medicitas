@@ -11,7 +11,7 @@ export default function Register() {
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const [form, setForm] = useState({
+  const [form, setForm] = useState({ // este estado se encarga de guardar los valores de los inputs
     name: "",
     email: "",
     password: "",
@@ -24,41 +24,42 @@ export default function Register() {
   };
 
   const handleChange = (event) => {
-    setForm({
-      ...form,
-      [event.target.id]: event.target.value,
+    setForm({ // actualizamos el estado con
+      ...form, // lo que tenia antes
+      [event.target.id]: event.target.value, // a cada id le agregamos el value
     });
 
-    setErrors((prev) => ({
-      ...prev,
-      [event.target.id]: "",
+    setErrors((prev) => ({ // tambien actualizamos setErrors
+      ...prev, // lo que tenia antes
+      [event.target.id]: "", // y lo dejamos en blanco
     }));
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const validationErrors = validateRegister(form);
+    const validationErrors = validateRegister(form); // le pasa el estado a la funcion para validar si hay errores
 
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
+    if (Object.keys(validationErrors).length > 0) { // si la longitud de validationErrors es mayor que 0
+      setErrors(validationErrors); /// actualizamos el estado con esos errores
       return;
     }
 
-    setErrors({});
+    // si no existe ningun error
+    setErrors({}); // ponemos el estado vacio
     setError("");
     setSuccess("");
     setLoading(true);
 
     try {
-      const response = await fetch(
+      const response = await fetch( // hacemos la peticion
         "https://curso-expressjs-production-a8af.up.railway.app/api/auth/register",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
+          body: JSON.stringify({ // le enviamos como cuerpo el estado donde guardamos los valores del input
             name: form.name,
             email: form.email,
             password: form.password,
@@ -66,7 +67,7 @@ export default function Register() {
         }
       );
 
-      const data = await response.json();
+      const data = await response.json(); // en data guardamos la respuesta del servidor
 
       if (!response.ok) {
         setError(data.error || "Error al registrar usuario.");
@@ -101,7 +102,7 @@ export default function Register() {
               type="text"
               value={form.name}
               placeholder="Ingresa tu nombre"
-              onChange={handleChange}
+              onChange={handleChange} // cuando cambie el valor del input llamamos a esa funcion
             />
             {errors.name && <p className="error-text">{errors.name}</p>}
           </div>

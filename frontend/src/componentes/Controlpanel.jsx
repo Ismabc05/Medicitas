@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 
 function Controlpanel() {
 
-  const [reservations, setReservations] = useState([]);
+  const [reservations, setReservations] = useState([]); // guardamos la respuesta del servidor de la peticion
   const [timeblocks, setTimeBlocks] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -14,7 +14,7 @@ function Controlpanel() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  useEffect(() => {
+  useEffect(() => { // usamos useEffect para los fetch ya que react debe renderizar la UI rapido y los fetch pueden tardar ya que vienen de sitios externos
   const fetchReservations = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -93,7 +93,7 @@ function Controlpanel() {
   try {
     const token = localStorage.getItem("token");
 
-    const payload = {
+    const payload = { // convertimos los valores del eestado en ISOSTRING ya que es el formato de fecha que usa nuestro modelo de prisma
       startTime: new Date(timeBlockForm.startTime).toISOString(),
       endTime: new Date(timeBlockForm.endTime).toISOString(),
     };
@@ -117,7 +117,7 @@ function Controlpanel() {
       return;
     }
 
-    setSuccess("Timeblock creado con éxito ✅");
+    setSuccess("Timeblock creado con éxito");
 
 
     setTimeout(() => {

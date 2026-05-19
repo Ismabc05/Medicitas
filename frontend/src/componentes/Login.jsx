@@ -67,7 +67,7 @@ export default function Login() {
         return;
       }
 
-      localStorage.setItem("token", data.token);
+      localStorage.setItem("token", data.token); // guardamos en localstorage el token ya que lo vamos a necesitar en las demas rutas para poder acceder a ellas
 
       setTimeout(() => {
         if (data.user.role === "USER") {
