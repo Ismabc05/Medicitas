@@ -2,7 +2,7 @@ import "../estilos/controlpanel.css";
 import React, { useEffect, useState } from "react";
 
 function Controlpanel() {
-
+  
   const [reservations, setReservations] = useState([]); // guardamos la respuesta del servidor de la peticion
   const [timeblocks, setTimeBlocks] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -13,6 +13,11 @@ function Controlpanel() {
   });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
+  const handleToTimeBlock = (event) => {
+    event.preventDefault()
+    navegar("/control-panel/timeblocks")
+  }
 
   useEffect(() => { // usamos useEffect para los fetch ya que react debe renderizar la UI rapido y los fetch pueden tardar ya que vienen de sitios externos
   const fetchReservations = async () => {
@@ -171,32 +176,45 @@ function Controlpanel() {
         </header>
 
         {showForm && (
-          <form
-            className="timeblock-form"
-            onSubmit={handleCreateTimeBlock}
-          >
+        <form className="timeblock-form" onSubmit={handleCreateTimeBlock}>
+          <div className="timeblock-field">
+          <label htmlFor="startTime">Fecha y hora de inicio</label>
             <input
+              id="startTime"
               type="datetime-local"
               name="startTime"
               value={timeBlockForm.startTime}
               onChange={handleTimeBlockChange}
             />
+          </div>
 
+          <div className="timeblock-field">
+            <label htmlFor="endTime">Fecha y hora de fin</label>
             <input
+              id="endTime"
               type="datetime-local"
               name="endTime"
               value={timeBlockForm.endTime}
               onChange={handleTimeBlockChange}
             />
+          </div>
 
-            <button type="submit">
-              Crear
-            </button>
-          </form>
+          <button
+            type="submit"
+            className="timeblock-submit"
+            disabled={!timeBlockForm.startTime || !timeBlockForm.endTime}
+          >
+            Crear
+          </button>
+        </form>
         )}
 
-        {success && (<div className="success-message">{success}</div>)}
-
+        {success && (
+          <div className="success-toast">
+            <p className="success-toast__title">Timeblock guardado</p>
+            <p className="success-toast__text">{success}</p>
+          </div>
+        )}
         <section className="cp-cards">
           <article className="cp-card">
             <span>Total reservas</span>
@@ -257,7 +275,7 @@ function Controlpanel() {
           <div className="cp-panel">
             <div className="cp-panel-header">
               <h2>Timeblocks</h2>
-              <a href="#">Gestionar</a>
+              <a>Gestionar</a>
             </div>
 
             <div className="cp-empty">
@@ -282,9 +300,6 @@ function Controlpanel() {
                   </div>
                 ))
               )}
-            </div>
-
-            <div className="cp-mini-actions">
             </div>
           </div>
         </section>
