@@ -1,5 +1,6 @@
 import "../estilos/controlpanel.css";
 import { Outlet } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 function AdminLayout() {
   return (
@@ -14,10 +15,10 @@ function AdminLayout() {
         </div>
 
         <nav className="cp-nav">
-          <a href="/control-panel">Dashboard</a>
-          <a href="/control-panel/timeblocks">Timeblocks</a>
-          <a href="/control-panel/reservas">Reservas</a>
-          <a href="/control-panel/ajustes">Ajustes</a>
+          <NavLink to="/control-panel" end className={({ isActive }) => isActive ? "cp-nav-item active" : "cp-nav-item" }>Dashboard</NavLink>
+          <NavLink to="/control-panel/timeblocks" className={({ isActive }) => isActive ? "cp-nav-item active" : "cp-nav-item" }>Timeblocks</NavLink>
+          <NavLink to="/control-panel/reservas" className={({ isActive }) => isActive ? "cp-nav-item active" : "cp-nav-item" }>Reservas</NavLink>
+          <NavLink to="/control-panel/ajustes" className={({ isActive }) => isActive ? "cp-nav-item active" : "cp-nav-item" }>Ajustes</NavLink>
         </nav>
       </aside>
 
