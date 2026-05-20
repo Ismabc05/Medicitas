@@ -2,7 +2,7 @@ import "../estilos/controlpanel.css";
 import React, { useEffect, useState } from "react";
 
 function Controlpanel() {
-  
+
   const [reservations, setReservations] = useState([]); // guardamos la respuesta del servidor de la peticion
   const [timeblocks, setTimeBlocks] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -13,11 +13,6 @@ function Controlpanel() {
   });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
-  const handleToTimeBlock = (event) => {
-    event.preventDefault()
-    navegar("/control-panel/timeblocks")
-  }
 
   useEffect(() => { // usamos useEffect para los fetch ya que react debe renderizar la UI rapido y los fetch pueden tardar ya que vienen de sitios externos
   const fetchReservations = async () => {
@@ -136,32 +131,12 @@ function Controlpanel() {
       endTime: ""
     });
 
-    setShowForm(false);
-
   } catch (error) {
     setError("Error de conexión");
   }
   };
 
   return (
-    <div className="cp-layout">
-      <aside className="cp-sidebar">
-        <div className="cp-brand">
-          <div className="cp-logo">✱</div>
-          <div>
-            <h2>MediCitas</h2>
-            <p>Admin Panel</p>
-          </div>
-        </div>
-
-        <nav className="cp-nav">
-          <a href="#" className="cp-nav-item active">Dashboard</a>
-          <a href="#" className="cp-nav-item">Timeblocks</a>
-          <a href="#" className="cp-nav-item">Reservas</a>
-          <a href="#" className="cp-nav-item">Ajustes</a>
-        </nav>
-      </aside>
-
       <main className="cp-main">
         <header className="cp-header">
           <div>
@@ -304,7 +279,6 @@ function Controlpanel() {
           </div>
         </section>
       </main>
-    </div>
   );
 }
 
