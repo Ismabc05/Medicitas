@@ -51,7 +51,6 @@ function Reservas() {
         </div>
 
         <div className="res-header-actions">
-          <button className="res-button secondary">Filtrar</button>
           <button className="res-button">Exportar</button>
         </div>
       </div>
@@ -114,17 +113,6 @@ function Reservas() {
             </div>
           </div>
         </div>
-
-        <aside className="res-sidepanel">
-          <div className="res-panel">
-            <div className="res-panel-header">
-              <h2>Acciones rápidas</h2>
-            </div>
-
-            <button className="res-action-button">Ver detalles</button>
-            <button className="res-action-button danger">Cancelar</button>
-          </div>
-        </aside>
       </section>
     </section>
   );

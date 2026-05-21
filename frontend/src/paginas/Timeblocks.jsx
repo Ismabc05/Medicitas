@@ -62,17 +62,6 @@ function Timeblocks() {
             </div>
           </div>
         </div>
-
-        <aside className="tb-sidepanel">
-          <div className="tb-panel">
-            <div className="tb-panel-header">
-              <h2>Acciones</h2>
-            </div>
-
-            <button className="tb-action-button">Editar</button>
-            <button className="tb-action-button danger">Eliminar</button>
-          </div>
-        </aside>
       </section>
     </section>
   );

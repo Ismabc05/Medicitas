@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+  width: 100%;
 }
 
 .tb-header {
@@ -59,15 +60,18 @@
 
 .tb-content {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 1fr;
   gap: 20px;
+  width: 100%;
 }
 
 .tb-panel {
+  width: 100%;
   background: #fff;
   border-radius: 18px;
   padding: 20px;
   box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+  box-sizing: border-box;
 }
 
 .tb-panel-header {
@@ -96,19 +100,11 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-}
-
-.tb-empty-state {
-  border: 1px dashed #cbd5e1;
-  border-radius: 16px;
-  min-height: 180px;
-  display: grid;
-  place-items: center;
-  background: #f8fafc;
-  color: #64748b;
+  width: 100%;
 }
 
 .tb-item {
+  width: 100%;
   background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
   border: 1px solid #e2e8f0;
   border-left: 4px solid #1f97b8;
@@ -119,12 +115,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
-}
-
-.tb-item:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 12px 26px rgba(15, 23, 42, 0.08);
+  box-sizing: border-box;
 }
 
 .tb-item__main {
@@ -168,11 +159,6 @@
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: 0.18s ease;
-}
-
-.tb-mini-btn:hover {
-  background: #cbd5e1;
 }
 
 .tb-mini-btn.danger {
@@ -180,48 +166,17 @@
   color: #991b1b;
 }
 
-.tb-mini-btn.danger:hover {
-  background: #fecaca;
-}
-
-.tb-sidepanel {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.tb-action-button {
-  width: 100%;
-  border: none;
-  border-radius: 12px;
-  padding: 12px 14px;
-  margin-top: 10px;
-  background: #e2e8f0;
-  color: #0f172a;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.tb-action-button:hover {
-  background: #cbd5e1;
-}
-
-.tb-action-button.danger {
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-.tb-action-button.danger:hover {
-  background: #fecaca;
-}
-
 @media (max-width: 1024px) {
-  .tb-stats,
-  .tb-content {
+  .tb-stats {
     grid-template-columns: 1fr;
   }
 
   .tb-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tb-item {
     flex-direction: column;
     align-items: flex-start;
   }
