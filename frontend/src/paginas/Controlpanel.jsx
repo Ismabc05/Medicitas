@@ -147,8 +147,7 @@ function Controlpanel() {
           </div>
 
           <div className="cp-header-actions">
-            <button className="cp-button secondary" onClick={() => {navegar("/control-panel/reservas")}}>Ver reservas</button>
-            <button className="cp-button" onClick={() => setShowForm(!showForm)}>+ Nuevo timeblock </button>
+            <button className="cp-button" onClick={() => setShowForm(!showForm)}>+ Nuevo Horario </button>
           </div>
         </header>
 
@@ -188,7 +187,7 @@ function Controlpanel() {
 
         {success && (
           <div className="success-toast">
-            <p className="success-toast__title">Timeblock guardado</p>
+            <p className="success-toast__title">Horario guardado</p>
             <p className="success-toast__text">{success}</p>
           </div>
         )}
@@ -199,7 +198,7 @@ function Controlpanel() {
           </article>
 
           <article className="cp-card">
-            <span>Timeblocks activos</span>
+            <span>Horarios activos</span>
             <strong>{timeblocks.length}</strong>
           </article>
 
@@ -224,7 +223,7 @@ function Controlpanel() {
               ) : reservations.length === 0 ? (
                 <p>No hay reservas.</p>
               ) : (
-                reservations.map((reservation) => (
+                reservations.slice(0, 3).map((reservation) => (
                   <div key={reservation.id} className="reservation-card">
                   <p>
                     <strong>Usuario:</strong> {reservation.user.name}
@@ -251,19 +250,19 @@ function Controlpanel() {
 
           <div className="cp-panel">
             <div className="cp-panel-header">
-              <h2>Timeblocks</h2>
+              <h2>Horarios</h2>
               <a onClick={() => {navegar("/control-panel/timeblocks")}}>Gestionar</a>
             </div>
 
             <div className="cp-empty">
               {loading ? (
-                <p className="parrafo-reservas">Cargando timeblocks...</p>
+                <p className="parrafo-reservas">Cargando horarios...</p>
               ) : error ? (
                 <p className="error-text">{error}</p>
               ) : timeblocks.length === 0 ? (
                 <p>No hay timeblocks.</p>
               ) : (
-                timeblocks.map((timeblock) => (
+                timeblocks.slice(0, 5).map((timeblock) => (
                   <div key={timeblock.id} className="reservation-card">
                   <p>
                     <strong>Inicio:</strong>{" "}
