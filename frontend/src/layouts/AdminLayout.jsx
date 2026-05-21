@@ -2,7 +2,7 @@ import "../estilos/controlpanel.css";
 import { Outlet } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 
-function AdminLayout() {
+function AdminLayout() { // Contiene el menu y al final contiene Outlet que se reemplaza por el componente que hayamos seleccionado
   return (
     <div className="cp-layout">
       <aside className="cp-sidebar">
@@ -23,7 +23,7 @@ function AdminLayout() {
       </aside>
 
       <main className="cp-main">
-        <Outlet />
+        <Outlet /> 
       </main>
     </div>
   );

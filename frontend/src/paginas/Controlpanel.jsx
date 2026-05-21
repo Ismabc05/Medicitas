@@ -1,8 +1,10 @@
 import "../estilos/controlpanel.css";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Controlpanel() {
 
+  const navegar = useNavigate()
   const [reservations, setReservations] = useState([]); // guardamos la respuesta del servidor de la peticion
   const [timeblocks, setTimeBlocks] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -137,7 +139,7 @@ function Controlpanel() {
   };
 
   return (
-      <main className="cp-main">
+      <>
         <header className="cp-header">
           <div>
             <h1>Panel de administración</h1>
@@ -145,7 +147,7 @@ function Controlpanel() {
           </div>
 
           <div className="cp-header-actions">
-            <button className="cp-button secondary">Ver reservas</button>
+            <button className="cp-button secondary" onClick={() => {navegar("/control-panel/reservas")}}>Ver reservas</button>
             <button className="cp-button" onClick={() => setShowForm(!showForm)}>+ Nuevo timeblock </button>
           </div>
         </header>
@@ -211,7 +213,7 @@ function Controlpanel() {
           <div className="cp-panel">
             <div className="cp-panel-header">
               <h2>Reservas</h2>
-              <a href="#">Ver todas</a>
+              <a onClick={() => {navegar("/control-panel/reservas")}}>Ver todas</a>
             </div>
 
             <div className="cp-empty">
@@ -250,7 +252,7 @@ function Controlpanel() {
           <div className="cp-panel">
             <div className="cp-panel-header">
               <h2>Timeblocks</h2>
-              <a>Gestionar</a>
+              <a onClick={() => {navegar("/control-panel/timeblocks")}}>Gestionar</a>
             </div>
 
             <div className="cp-empty">
@@ -278,7 +280,7 @@ function Controlpanel() {
             </div>
           </div>
         </section>
-      </main>
+      </>
   );
 }
 
