@@ -6,6 +6,12 @@ function Timeblocks() {
   const [ timeblocks, setTimeblocks] = useState([])
   const [ error, setError] = useState("")
   const [ loading, setLoading] = useState(true)
+  const [ showForm, setShowForm] = useState(false)
+  const [ success, setSuccess] = useState("")
+  const [timeBlockForm, setTimeBlockForm] = useState({
+    startTime: "",
+    endTime: ""
+  });
 
   useEffect(() => {
 
@@ -26,6 +32,7 @@ function Timeblocks() {
 
         if(!response.ok) {
           setError(data.error || "Error al cargar los horarios")
+          return;
         }
 
         setTimeblocks(data)
@@ -42,6 +49,61 @@ function Timeblocks() {
 
   }, [])
 
+  const handleTimeBlockChange = (event) => {
+    setTimeBlockForm({
+      ...timeBlockForm,
+      [event.target.name]: event.target.value
+    });
+  };
+
+  const handleCreateTimeBlock = async (event) => {
+    event.preventDefault()
+
+    try{
+
+      const token = localStorage.getItem("token")
+
+      const payload = { // convertimos los valores del eestado en ISOSTRING ya que es el formato de fecha que usa nuestro modelo de prisma
+      startTime: new Date(timeBlockForm.startTime).toISOString(),
+      endTime: new Date(timeBlockForm.endTime).toISOString(),
+      };
+
+      const response = await fetch("https://curso-expressjs-production-a8af.up.railway.app/api/admin/create-time-blocks",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload)
+        }
+      );
+
+      const data = await response.json();
+
+      if(!response.ok) {
+        setError(data.error || "Error al crear el horario")
+        return;
+      }
+
+      setSuccess("Horario creado con exito")
+
+      setTimeout(() => {
+      setSuccess("");
+      }, 3000);
+
+      setTimeblocks((prev) => [...prev, data]);
+
+      setTimeBlockForm({
+      startTime: "",
+      endTime: ""
+      });
+
+    }catch(error) {
+      setError("Error al crear el nuevo horario")
+    }
+  }
+
   return (
     <section className="tb-page">
       <div className="tb-header">
@@ -50,7 +112,7 @@ function Timeblocks() {
           <p>Gestiona los bloques de tiempo disponibles.</p>
         </div>
 
-        <button className="tb-button">+ Nuevo timeblock</button>
+        <button className="tb-button" onClick={() => setShowForm(!showForm)}>+ Nuevo timeblock</button>
       </div>
 
       <section className="tb-stats">
@@ -70,6 +132,40 @@ function Timeblocks() {
         </article>
       </section>
 
+      {showForm && (
+        <form className="timeblock-form" onSubmit={handleCreateTimeBlock}>
+          <div className="timeblock-field">
+          <label htmlFor="startTime">Fecha y hora de inicio</label>
+            <input
+              id="startTime"
+              type="datetime-local"
+              name="startTime"
+              value={timeBlockForm.startTime}
+              onChange={handleTimeBlockChange}
+            />
+          </div>
+
+          <div className="timeblock-field">
+            <label htmlFor="endTime">Fecha y hora de fin</label>
+            <input
+              id="endTime"
+              type="datetime-local"
+              name="endTime"
+              value={timeBlockForm.endTime}
+              onChange={handleTimeBlockChange}
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="timeblock-submit"
+            disabled={!timeBlockForm.startTime || !timeBlockForm.endTime}
+          >
+            Crear
+          </button>
+        </form>
+        )}
+
       <section className="tb-content">
         <div className="tb-panel">
           <div className="tb-panel-header">
@@ -87,7 +183,7 @@ function Timeblocks() {
               ) : timeblocks.length === 0 ? (
                 <p>No hay timeblocks.</p>
               ) : (
-                timeblocks.slice(0, 5).map((timeblock) => (
+                timeblocks.map((timeblock) => (
                   <div key={timeblock.id} className="tb-time-card">
 
                     <div className="tb-time-row">
@@ -119,6 +215,14 @@ function Timeblocks() {
           </div>
         </div>
       </section>
+
+      {success && (
+          <div className="success-toast">
+            <p className="success-toast__title">Horario guardado</p>
+            <p className="success-toast__text">{success}</p>
+          </div>
+        )}
+
     </section>
   );
 }
