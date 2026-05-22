@@ -82,6 +82,18 @@ function Controlpanel() {
     fetchTimeblocks();
   }, []);
 
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => {
+      // aquí limpias el mensaje o el estado
+        setSuccess("");
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [success]);
+
+
   const handleTimeBlockChange = (event) => {
     setTimeBlockForm({
       ...timeBlockForm,
@@ -151,6 +163,23 @@ function Controlpanel() {
           </div>
         </header>
 
+        <section className="cp-cards">
+          <article className="cp-card">
+            <span>Total reservas</span>
+            <strong>{reservations.length}</strong>
+          </article>
+
+          <article className="cp-card">
+            <span>Horarios activos</span>
+            <strong>{timeblocks.length}</strong>
+          </article>
+
+          <article className="cp-card">
+            <span>Reservas pendientes</span>
+            <strong>0</strong>
+          </article>
+        </section>
+
         {showForm && (
         <form className="timeblock-form" onSubmit={handleCreateTimeBlock}>
           <div className="timeblock-field">
@@ -184,29 +213,6 @@ function Controlpanel() {
           </button>
         </form>
         )}
-
-        {success && (
-          <div className="success-toast">
-            <p className="success-toast__title">Horario guardado</p>
-            <p className="success-toast__text">{success}</p>
-          </div>
-        )}
-        <section className="cp-cards">
-          <article className="cp-card">
-            <span>Total reservas</span>
-            <strong>{reservations.length}</strong>
-          </article>
-
-          <article className="cp-card">
-            <span>Horarios activos</span>
-            <strong>{timeblocks.length}</strong>
-          </article>
-
-          <article className="cp-card">
-            <span>Reservas pendientes</span>
-            <strong>0</strong>
-          </article>
-        </section>
 
         <section className="cp-grid">
           <div className="cp-panel">
@@ -278,6 +284,12 @@ function Controlpanel() {
               )}
             </div>
           </div>
+          {success && (
+          <div className="success-toast">
+            <p className="success-toast__title">Horario guardado</p>
+            <p className="success-toast__text">{success}</p>
+          </div>
+        )}
         </section>
       </>
   );

@@ -1,7 +1,47 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../estilos/timeblocks.css";
 
 function Timeblocks() {
+
+  const [ timeblocks, setTimeblocks] = useState([])
+  const [ error, setError] = useState("")
+  const [ loading, setLoading] = useState(true)
+
+  useEffect(() => {
+
+    const fetchTimeblocks = async () => {
+
+      try {
+
+        const token = localStorage.getItem("token")
+        const response = await fetch(
+          "https://curso-expressjs-production-a8af.up.railway.app/api/admin/time-blocks",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+        });
+
+        const data = await response.json()
+
+        if(!response.ok) {
+          setError(data.error || "Error al cargar los horarios")
+        }
+
+        setTimeblocks(data)
+
+      } catch (error) {
+        setError("Error al conectarse con el servidor")
+      } finally {
+        setLoading(false)
+      }
+
+    }
+
+    fetchTimeblocks()
+
+  }, [])
+
   return (
     <section className="tb-page">
       <div className="tb-header">
@@ -16,17 +56,17 @@ function Timeblocks() {
       <section className="tb-stats">
         <article className="tb-stat-card">
           <span>Total timeblocks</span>
-          <strong>--</strong>
+          <strong>{timeblocks.length}</strong>
         </article>
 
         <article className="tb-stat-card">
           <span>Activos</span>
-          <strong>--</strong>
+          <strong>{timeblocks.length}</strong>
         </article>
 
         <article className="tb-stat-card">
           <span>Reservados</span>
-          <strong>--</strong>
+          <strong>0</strong>
         </article>
       </section>
 
@@ -40,25 +80,41 @@ function Timeblocks() {
           <div className="tb-list">
             <div className="tb-item">
               <div className="tb-item__main">
-                <div className="tb-item__date">
-                  <span className="tb-label">Inicio</span>
-                  <strong>1/6/2026, 11:00</strong>
-                </div>
+                {loading ? (
+                <p className="parrafo-reservas">Cargando horarios...</p>
+              ) : error ? (
+                <p className="error-text">{error}</p>
+              ) : timeblocks.length === 0 ? (
+                <p>No hay timeblocks.</p>
+              ) : (
+                timeblocks.slice(0, 5).map((timeblock) => (
+                  <div key={timeblock.id} className="tb-time-card">
 
-                <div className="tb-item__date">
-                  <span className="tb-label">Fin</span>
-                  <strong>1/6/2026, 12:00</strong>
-                </div>
+                    <div className="tb-time-row">
+                      <span className="tb-time-label">Inicio</span>
+
+                      <span className="tb-time-value">
+                        {new Date(timeblock.startTime).toLocaleString()}
+                      </span>
+                    </div>
+
+                    <div className="tb-time-row">
+                      <span className="tb-time-label">Fin</span>
+
+                      <span className="tb-time-value">
+                        {new Date(timeblock.endTime).toLocaleString()}
+                      </span>
+                    </div>
+
+                    <div className="tb-time-actions">
+                      <button className="tb-mini-btn">Editar</button>
+                      <button className="tb-mini-btn danger">Eliminar</button>
+                    </div>
+
+                  </div>
+                ))
+              )}
               </div>
-
-              <div className="tb-item__actions">
-                <button className="tb-mini-btn">Editar</button>
-                <button className="tb-mini-btn danger">Eliminar</button>
-              </div>
-            </div>
-
-            <div className="tb-empty-state">
-              <p>Los timeblocks aparecerán aquí.</p>
             </div>
           </div>
         </div>
