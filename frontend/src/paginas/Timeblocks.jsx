@@ -104,20 +104,56 @@ function Timeblocks() {
     }
   }
 
+  const handleToDeleteTimeblock = async (id) => {
+
+    try {
+
+      const token = localStorage.getItem("token")
+
+      const response = await fetch(`https://curso-expressjs-production-a8af.up.railway.app/api/admin/delete-time-blocks/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          }
+        }
+      )
+
+      if(!response.ok){
+        setError("Error al eliminar el horario")
+        return;
+      }
+
+      setSuccess("Timeblock borrado con éxito");
+
+      setTimeout(() => {
+        setSuccess("");
+      }, 3000);
+
+      setTimeblocks((prev) =>
+        prev.filter((timeblock) => timeblock.id !== id)
+      )
+
+    } catch (error) {
+      setError("Error al eliminar el horario")
+    }
+  }
+
   return (
     <section className="tb-page">
       <div className="tb-header">
         <div>
-          <h1>Timeblocks</h1>
+          <h1>Horarios</h1>
           <p>Gestiona los bloques de tiempo disponibles.</p>
         </div>
 
-        <button className="tb-button" onClick={() => setShowForm(!showForm)}>+ Nuevo timeblock</button>
+        <button className="tb-button" onClick={() => setShowForm(!showForm)}>+ Nuevo horario</button>
       </div>
 
       <section className="tb-stats">
         <article className="tb-stat-card">
-          <span>Total timeblocks</span>
+          <span>Total Horarios</span>
           <strong>{timeblocks.length}</strong>
         </article>
 
@@ -128,7 +164,7 @@ function Timeblocks() {
 
         <article className="tb-stat-card">
           <span>Reservados</span>
-          <strong>0</strong>
+          <strong>{timeblocks.filter(tb => tb.appointments?.length > 0).length}</strong>
         </article>
       </section>
 
@@ -183,32 +219,57 @@ function Timeblocks() {
               ) : timeblocks.length === 0 ? (
                 <p>No hay timeblocks.</p>
               ) : (
-                timeblocks.map((timeblock) => (
+                timeblocks.map((timeblock) => {
+
+                  const reservado = timeblock.appointments?.length > 0;
+
+                return (
                   <div key={timeblock.id} className="tb-time-card">
 
-                    <div className="tb-time-row">
-                      <span className="tb-time-label">Inicio</span>
+                  <div className="tb-time-row">
+                    <span className="tb-time-label">Inicio</span>
 
-                      <span className="tb-time-value">
-                        {new Date(timeblock.startTime).toLocaleString()}
-                      </span>
-                    </div>
+                    <span className="tb-time-value">
+                      {new Date(timeblock.startTime).toLocaleString()}
+                    </span>
+                  </div>
 
-                    <div className="tb-time-row">
-                      <span className="tb-time-label">Fin</span>
+                  <div className="tb-time-row">
+                    <span className="tb-time-label">Fin</span>
 
-                      <span className="tb-time-value">
-                        {new Date(timeblock.endTime).toLocaleString()}
-                      </span>
-                    </div>
+                    <span className="tb-time-value">
+                      {new Date(timeblock.endTime).toLocaleString()}
+                    </span>
+                  </div>
 
-                    <div className="tb-time-actions">
-                      <button className="tb-mini-btn">Editar</button>
-                      <button className="tb-mini-btn danger">Eliminar</button>
-                    </div>
+                  {reservado && (
+                    <p className="tb-reserved-text">
+                      Horario reservado
+                    </p>
+                  )}
+
+                  <div className="tb-time-actions">
+
+                    <button
+                      className="tb-mini-btn"
+                      disabled={reservado}
+                    >
+                    Editar
+                    </button>
+
+                    <button
+                      className="tb-mini-btn danger"
+                      disabled={reservado}
+                      onClick={() => handleToDeleteTimeblock(timeblock.id)}
+                      >
+                      Eliminar
+                    </button>
 
                   </div>
-                ))
+
+                </div>
+                );
+                })
               )}
               </div>
             </div>
@@ -218,7 +279,6 @@ function Timeblocks() {
 
       {success && (
           <div className="success-toast">
-            <p className="success-toast__title">Horario guardado</p>
             <p className="success-toast__text">{success}</p>
           </div>
         )}

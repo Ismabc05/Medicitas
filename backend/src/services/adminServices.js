@@ -16,6 +16,9 @@ const listTimeBlocksService = async () => {
     const timeblocks = await prisma.timeBlock.findMany({ // mostramos todas las columnas de la tabla timeBlock
         orderBy: { //ademas con orderBy mostramos eb orden ascendente la fecha de inicio
             startTime: "asc"
+        },
+        include: {
+            appointments: true
         }
     })
     return timeblocks
