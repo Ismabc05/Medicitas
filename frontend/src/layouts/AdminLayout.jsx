@@ -10,7 +10,7 @@ function AdminLayout() { // Contiene el menu y al final contiene Outlet que se r
           <div className="cp-logo">✱</div>
           <div>
             <h2>MediCitas</h2>
-            <p>Admin Panel</p>
+            <p>Panel de administración</p>
           </div>
         </div>
 
@@ -18,7 +18,6 @@ function AdminLayout() { // Contiene el menu y al final contiene Outlet que se r
           <NavLink to="/control-panel" end className={({ isActive }) => isActive ? "cp-nav-item active" : "cp-nav-item" }>Dashboard</NavLink> {/* si estamos en esa ruta se añade la clase active */}
           <NavLink to="/control-panel/timeblocks" className={({ isActive }) => isActive ? "cp-nav-item active" : "cp-nav-item" }>Horarios</NavLink>
           <NavLink to="/control-panel/reservas" className={({ isActive }) => isActive ? "cp-nav-item active" : "cp-nav-item" }>Reservas</NavLink>
-          <NavLink to="/control-panel/ajustes" className={({ isActive }) => isActive ? "cp-nav-item active" : "cp-nav-item" }>Ajustes</NavLink>
         </nav>
       </aside>
 

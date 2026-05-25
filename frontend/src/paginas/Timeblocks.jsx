@@ -242,11 +242,9 @@ function Timeblocks() {
                     </span>
                   </div>
 
-                  {reservado && (
-                    <p className="tb-reserved-text">
-                      Horario reservado
-                    </p>
-                  )}
+                  <p className={`tb-reserved-text ${!reservado ? "empty" : ""}`}>
+                    {reservado ? "Horario reservado" : ""}
+                  </p>
 
                   <div className="tb-time-actions">
 

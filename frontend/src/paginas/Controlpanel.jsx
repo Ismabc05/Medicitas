@@ -150,16 +150,24 @@ function Controlpanel() {
   }
   };
 
+  const handleToCloseSession = (event) => {
+    event.preventDefault()
+    localStorage.removeItem("token")
+    localStorage.removeItem("user")
+    navegar("/")
+  }
+
   return (
       <>
         <header className="cp-header">
           <div>
             <h1>Panel de administración</h1>
-            <p>Gestiona timeblocks y revisa las reservas.</p>
+            <p>Gestiona horarios y revisa las reservas.</p>
           </div>
 
           <div className="cp-header-actions">
             <button className="cp-button" onClick={() => setShowForm(!showForm)}>+ Nuevo Horario </button>
+            <button className="cp-button-session" onClick={handleToCloseSession}>Cerrar Sesion</button>
           </div>
         </header>
 

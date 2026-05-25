@@ -109,6 +109,16 @@
   cursor: pointer;
 }
 
+.cp-button-session {
+  border: none;
+  background: #c23838;
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 .cp-button.secondary {
   background: #e2e8f0;
   color: #0f172a;
@@ -116,6 +126,10 @@
 
 .cp-button:hover {
   background: #167f9b;
+}
+
+.cp-button-session:hover {
+  background: #a82121;
 }
 
 .cp-button.secondary:hover {

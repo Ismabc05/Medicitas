@@ -63,7 +63,7 @@ function Reservas() {
 
         <article className="res-stat-card">
           <span>Confirmadas</span>
-          <strong>0</strong>
+          <strong>{reservas.length}</strong>
         </article>
 
         <article className="res-stat-card">

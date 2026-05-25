@@ -6,7 +6,6 @@ import { Register } from "./componentes/Register";
 import { AdminLayout } from "./layouts/AdminLayout";
 import { Timeblocks } from "./paginas/Timeblocks";
 import { Reservas } from "./paginas/Reservas";
-import { Ajustes } from "./paginas/Ajustes";
 
 function App() {
 
@@ -21,7 +20,6 @@ function App() {
           <Route index element={<Controlpanel />} /> {/* por defecto se abre está */}
           <Route path="timeblocks" element={<Timeblocks />} />
           <Route path="reservas" element={<Reservas />} />
-          <Route path="ajustes" element={<Ajustes />} />
         </Route>
         
       </Routes>

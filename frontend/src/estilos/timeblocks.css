@@ -179,6 +179,12 @@
   color: #dc2626;
   font-size: 13px;
   font-weight: 600;
+  min-width: 140px; /* 👈 CLAVE */
+  text-align: center;
+}
+
+.tb-reserved-text.empty {
+  visibility: hidden; /* 👈 ocupa espacio pero no se ve */
 }
 
 .tb-time-card {
