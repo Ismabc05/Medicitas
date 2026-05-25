@@ -170,6 +170,17 @@
   color: #991b1b;
 }
 
+.tb-mini-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.tb-reserved-text {
+  color: #dc2626;
+  font-size: 13px;
+  font-weight: 600;
+}
+
 .tb-time-card {
   width: 100%;
   background: #fff;
