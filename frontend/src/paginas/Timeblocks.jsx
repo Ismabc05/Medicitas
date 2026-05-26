@@ -13,6 +13,9 @@ function Timeblocks() {
     endTime: ""
   });
 
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+
   useEffect(() => {
 
     const fetchTimeblocks = async () => {
@@ -132,13 +135,92 @@ function Timeblocks() {
       }, 3000);
 
       setTimeblocks((prev) =>
-        prev.filter((timeblock) => timeblock.id !== id)
+        prev.filter((timeblock) => timeblock.id !== id) // actualizamos el estado con los demas timeblocks excepto el id seleccionado 
       )
 
     } catch (error) {
       setError("Error al eliminar el horario")
     }
   }
+
+  const handleEditTimeBlock = async (id) => {
+
+    try {
+
+      const token = localStorage.getItem("token")
+
+      const response = await fetch(`https://curso-expressjs-production-a8af.up.railway.app/api/admin/update-time-blocks/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          startTime: new Date(timeBlockForm.startTime).toISOString(),
+          endTime: new Date(timeBlockForm.endTime).toISOString(),
+        })
+      })
+
+      if(!response.ok){
+        setError("Error al editar el horario")
+        return;
+      }
+
+      const data = await response.json()
+
+      setSuccess("Horario creado con exito")
+
+      setTimeout(() => {
+      setSuccess("");
+      }, 3000);
+
+      setTimeblocks((prev) =>
+        prev.map((tb) =>
+        tb.id === id ? data : tb
+        )
+      );
+
+      setIsEditing(false);
+
+      setEditingId(null);
+
+      setShowForm(false);
+
+      setTimeBlockForm({
+        startTime: "",
+        endTime: ""
+      });
+
+
+    } catch (error) {
+      setError("Error al editar el horario")
+    }
+  }
+
+  const handleStartEdit = (timeblock) => {
+
+  setIsEditing(true);
+
+  setEditingId(timeblock.id);
+
+  const formatDateForInput = (dateString) => {
+
+    const date = new Date(dateString);
+
+    date.setMinutes(
+      date.getMinutes() - date.getTimezoneOffset()
+    );
+
+    return date.toISOString().slice(0, 16);
+  };
+
+  setTimeBlockForm({
+    startTime: formatDateForInput(timeblock.startTime),
+    endTime: formatDateForInput(timeblock.endTime),
+  });
+
+  setShowForm(true);
+  };
 
   return (
     <section className="tb-page">
@@ -169,7 +251,9 @@ function Timeblocks() {
       </section>
 
       {showForm && (
-        <form className="timeblock-form" onSubmit={handleCreateTimeBlock}>
+        <form className="timeblock-form" onSubmit={isEditing ? (e) => {
+          e.preventDefault();
+          handleEditTimeBlock(editingId);} : handleCreateTimeBlock}>
           <div className="timeblock-field">
           <label htmlFor="startTime">Fecha y hora de inicio</label>
             <input
@@ -197,7 +281,7 @@ function Timeblocks() {
             className="timeblock-submit"
             disabled={!timeBlockForm.startTime || !timeBlockForm.endTime}
           >
-            Crear
+            {isEditing ? "Actualizar" : "Crear"}
           </button>
         </form>
         )}
@@ -221,7 +305,7 @@ function Timeblocks() {
               ) : (
                 timeblocks.map((timeblock) => {
 
-                  const reservado = timeblock.appointments?.length > 0;
+                  const reservado = timeblock.appointments?.length > 0; // vemos si existe alguna reserva en appoiments
 
                 return (
                   <div key={timeblock.id} className="tb-time-card">
@@ -230,7 +314,9 @@ function Timeblocks() {
                     <span className="tb-time-label">Inicio</span>
 
                     <span className="tb-time-value">
-                      {new Date(timeblock.startTime).toLocaleString()}
+                      {new Date(timeblock.startTime).toLocaleString("es-ES", {
+                        timeZone: "Europe/Madrid"
+                      })}
                     </span>
                   </div>
 
@@ -238,12 +324,14 @@ function Timeblocks() {
                     <span className="tb-time-label">Fin</span>
 
                     <span className="tb-time-value">
-                      {new Date(timeblock.endTime).toLocaleString()}
+                      {new Date(timeblock.endTime).toLocaleString("es-ES", {
+                        timeZone: "Europe/Madrid"
+                      })}
                     </span>
                   </div>
 
-                  <p className={`tb-reserved-text ${!reservado ? "empty" : ""}`}>
-                    {reservado ? "Horario reservado" : ""}
+                  <p className={`tb-reserved-text ${!reservado ? "empty" : ""}`}> 
+                    {reservado ? "Horario reservado" : ""} 
                   </p>
 
                   <div className="tb-time-actions">
@@ -251,6 +339,7 @@ function Timeblocks() {
                     <button
                       className="tb-mini-btn"
                       disabled={reservado}
+                      onClick={() => handleStartEdit(timeblock)}
                     >
                     Editar
                     </button>
