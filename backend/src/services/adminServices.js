@@ -2,15 +2,47 @@ const { PrismaClient } = require("../../../generated/prisma")
 const prisma = new PrismaClient(); // prisma client sirve para interactuar con la base de datos
 
 const createTimeBlockService = async (startTime, endTime) => {
-    const newBlockTime = await prisma.timeBlock.create({ // vamos a crear en la tabla timeBlock la siguiente data
-        data: {
-            startTime: new Date(startTime),
-            endTime: new Date(endTime)
-        }
-    });
+  const newStart = new Date(startTime);
+  const newEnd = new Date(endTime);
 
-    return newBlockTime
-}
+  if (isNaN(newStart) || isNaN(newEnd)) {
+    throw new Error("Formato de fecha inválido");
+  }
+
+  if (newStart >= newEnd) {
+    throw new Error("La hora de inicio debe ser menor que la de fin");
+  }
+
+  const conflict = await prisma.timeBlock.findFirst({
+    where: {
+      AND: [
+        {
+          startTime: {
+            lt: newEnd,
+          },
+        },
+        {
+          endTime: {
+            gt: newStart,
+          },
+        },
+      ],
+    },
+  });
+
+  if (conflict) {
+    throw new Error("Ya existe un horario que se cruza con ese rango");
+  }
+
+  const newBlockTime = await prisma.timeBlock.create({
+    data: {
+      startTime: newStart,
+      endTime: newEnd,
+    },
+  });
+
+  return newBlockTime;
+};
 
 const listTimeBlocksService = async () => {
     const timeblocks = await prisma.timeBlock.findMany({ // mostramos todas las columnas de la tabla timeBlock
@@ -25,11 +57,52 @@ const listTimeBlocksService = async () => {
 }
 
 const updateTimeBlockService = async (id, data) => {
-  return await prisma.timeBlock.update({ // actualizamos una columna de la tabla timeBlock
-    where: { // donde
-      id: parseInt(id), // tenga ese id, se parsea a entero porque puede venir en sting
+  const currentId = parseInt(id, 10);
+  const newStart = new Date(data.startTime);
+  const newEnd = new Date(data.endTime);
+
+  if (isNaN(newStart.getTime()) || isNaN(newEnd.getTime())) {
+    throw new Error("Formato de fecha inválido");
+  }
+
+  if (newStart >= newEnd) {
+    throw new Error("La hora de inicio debe ser menor que la de fin");
+  }
+
+  const conflict = await prisma.timeBlock.findFirst({
+    where: {
+      AND: [
+        {
+          id: {
+            not: currentId,
+          },
+        },
+        {
+          startTime: {
+            lt: newEnd,
+          },
+        },
+        {
+          endTime: {
+            gt: newStart,
+          },
+        },
+      ],
     },
-    data, // y lo actualizamos con la data que le pasamos
+  });
+
+  if (conflict) {
+    throw new Error("Ya existe un horario que se cruza con ese rango");
+  }
+
+  return await prisma.timeBlock.update({
+    where: {
+      id: currentId,
+    },
+    data: {
+      startTime: newStart,
+      endTime: newEnd,
+    },
   });
 };
 

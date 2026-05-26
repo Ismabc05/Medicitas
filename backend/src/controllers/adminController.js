@@ -14,7 +14,7 @@ const createTimeBlocks = async (req, res) => {
         return res.status(201).json(newTimeBlock) // y retornamos el bloque
 
     } catch (error) { // y si sale error emviamos el error correspondiente
-        return res.status(500).json({error: "Error creating time block" })
+        return res.status(400).json({error: error.message })
     }
 }
 
@@ -40,7 +40,7 @@ const updateTimeBlocks = async (req, res) => {
         return res.json(updated)
 
     } catch (error) {
-        return res.status(500).json({ error: "Error updating time block" });
+        return res.status(400).json({ error: error.message });
     }
 
 
