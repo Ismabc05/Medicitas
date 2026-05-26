@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "../estilos/login.css";
 import { useNavigate } from "react-router-dom";
 import { validateLogin } from "../utils/validateLogin";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function Login() {
   const navegar = useNavigate();
@@ -12,6 +13,11 @@ export default function Login() {
     email: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePassword = () => {
+    setShowPassword((prev) => !prev);
+  };
 
   const handleToRegister = (event) => {
     event.preventDefault();
@@ -113,13 +119,25 @@ export default function Login() {
 
           <div className="login-field">
             <label htmlFor="password">Contraseña:</label>
-            <input
-              id="password"
-              type="password"
-              value={form.password}
-              placeholder="Ingresa tu contraseña..."
-              onChange={handleChange}
-            />
+
+            <div className="password-wrapper">
+              <input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                value={form.password}
+                placeholder="Ingresa tu contraseña..."
+                onChange={handleChange}
+              />
+
+              <button
+                type="button"
+                className="toggle-password"
+                onClick={togglePassword}
+              >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
+
             {errors.password && <p className="error-text">{errors.password}</p>}
           </div>
 
