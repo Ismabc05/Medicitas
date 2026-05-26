@@ -15,6 +15,7 @@ function Controlpanel() {
   });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [formError, setFormError] = useState("");
 
   useEffect(() => { // usamos useEffect para los fetch ya que react debe renderizar la UI rapido y los fetch pueden tardar ya que vienen de sitios externos
   const fetchReservations = async () => {
@@ -127,7 +128,7 @@ function Controlpanel() {
     const data = await response.json();
 
     if (!response.ok) {
-      setError(data.error || "Error creando timeblock");
+      setFormError(data.error || "Error creando timeblock");
       return;
     }
 
@@ -219,6 +220,7 @@ function Controlpanel() {
           >
             Crear
           </button>
+          {formError && <p className="error-text">{formError}</p>}
         </form>
         )}
 

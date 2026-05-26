@@ -15,6 +15,7 @@ function Timeblocks() {
 
   const [isEditing, setIsEditing] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [formError, setFormError] = useState("");
 
   useEffect(() => {
 
@@ -85,7 +86,7 @@ function Timeblocks() {
       const data = await response.json();
 
       if(!response.ok) {
-        setError(data.error || "Error al crear el horario")
+        setFormError(data.error || "Error al crear el horario")
         return;
       }
 
@@ -162,7 +163,7 @@ function Timeblocks() {
       })
 
       if(!response.ok){
-        setError("Error al editar el horario")
+        setFormError("Error al editar el horario")
         return;
       }
 
@@ -283,6 +284,7 @@ function Timeblocks() {
           >
             {isEditing ? "Actualizar" : "Crear"}
           </button>
+          {formError && <p className="error-text">{formError}</p>}
         </form>
         )}
 
