@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 import "../estilos/reservas.css";
 
 function Reservas() {
@@ -42,6 +44,45 @@ function Reservas() {
 
   }, [])
 
+  const handleExportPDF = () => {
+
+  const doc = new jsPDF();
+
+  doc.setFontSize(18);
+
+  doc.text("Listado de Reservas", 14, 20);
+
+  const tableColumn = [
+    "Usuario",
+    "Email",
+    "Inicio",
+    "Fin"
+  ];
+
+  const tableRows = reservas.map((reserva) => [
+
+    reserva.user.name,
+
+    reserva.user.email,
+
+    new Date(reserva.timeBlock.startTime).toLocaleString("es-ES", {
+      timeZone: "Europe/Madrid"
+    }),
+
+    new Date(reserva.timeBlock.endTime).toLocaleString("es-ES", {
+      timeZone: "Europe/Madrid"
+    }),
+  ]);
+
+  autoTable(doc, {
+    head: [tableColumn],
+    body: tableRows,
+    startY: 30,
+  });
+
+  doc.save("reservas.pdf");
+  };
+
   return (
     <section className="res-page">
       <div className="res-header">
@@ -51,7 +92,7 @@ function Reservas() {
         </div>
 
         <div className="res-header-actions">
-          <button className="res-button">Exportar</button>
+          <button className="res-button" onClick={handleExportPDF}>Exportar</button>
         </div>
       </div>
 
