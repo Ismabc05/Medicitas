@@ -117,12 +117,12 @@ function Home() {
               </div>
 
               <div className="home-reservation-actions">
-                <button className="home-action secondary">
-                  Editar
+                <button className="home-icon-btn" aria-label="Editar reserva">
+                  ✎
                 </button>
 
-                <button className="home-action danger">
-                  Eliminar
+                <button className="home-icon-btn danger" aria-label="Eliminar reserva">
+                  <AiOutlineCloseCircle />
                 </button>
               </div>
             </div>
@@ -134,12 +134,12 @@ function Home() {
               </div>
 
               <div className="home-reservation-actions">
-                <button className="home-action secondary">
-                  Editar
+                <button className="home-icon-btn" aria-label="Editar reserva">
+                  ✎
                 </button>
 
-                <button className="home-action danger">
-                  Eliminar
+                <button className="home-icon-btn danger" aria-label="Eliminar reserva">
+                  <AiOutlineCloseCircle />
                 </button>
               </div>
             </div>
