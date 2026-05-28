@@ -50,6 +50,8 @@ function Home() {
       </section>
 
       <section className="home-layout">
+
+        {/* HORARIOS DISPONIBLES */}
         <main className="home-panel home-schedule">
           <div className="home-panel__header">
             <div>
@@ -96,6 +98,55 @@ function Home() {
             </div>
           </div>
         </main>
+
+        {/* MIS RESERVAS */}
+        <aside className="home-panel home-reservations">
+          <div className="home-panel__header">
+            <div>
+              <h2>Mis reservas</h2>
+              <p>Gestiona tus reservas activas.</p>
+            </div>
+          </div>
+
+          <div className="home-reservations-list">
+
+            <div className="home-reservation-card">
+              <div className="home-reservation-info">
+                <span className="home-time-label">Reserva</span>
+                <strong>1/6/2026, 11:00 - 12:00</strong>
+              </div>
+
+              <div className="home-reservation-actions">
+                <button className="home-action secondary">
+                  Editar
+                </button>
+
+                <button className="home-action danger">
+                  Eliminar
+                </button>
+              </div>
+            </div>
+
+            <div className="home-reservation-card">
+              <div className="home-reservation-info">
+                <span className="home-time-label">Reserva</span>
+                <strong>2/6/2026, 16:00 - 17:00</strong>
+              </div>
+
+              <div className="home-reservation-actions">
+                <button className="home-action secondary">
+                  Editar
+                </button>
+
+                <button className="home-action danger">
+                  Eliminar
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </aside>
+
       </section>
     </section>
   );
