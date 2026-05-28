@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
+import jsPDF from "jspdf"; // Importa la clase que crea el PDF.
+import autoTable from "jspdf-autotable"; // Importa la función que genera tablas.
 import "../estilos/reservas.css";
 
 function Reservas() {
@@ -46,20 +46,20 @@ function Reservas() {
 
   const handleExportPDF = () => {
 
-  const doc = new jsPDF();
+  const doc = new jsPDF(); // crea el documento pdf
 
-  doc.setFontSize(18);
+  doc.setFontSize(18); // tiene un fuente de 18 px
 
-  doc.text("Listado de Reservas", 14, 20);
+  doc.text("Listado de Reservas", 14, 20); // escribe text en el pdf
 
-  const tableColumn = [
+  const tableColumn = [ // Define los nombres de las columnas.
     "Usuario",
     "Email",
     "Inicio",
     "Fin"
   ];
 
-  const tableRows = reservas.map((reserva) => [
+  const tableRows = reservas.map((reserva) => [ // Recorre todas las reservas y crea una fila por cada una.
 
     reserva.user.name,
 
@@ -74,13 +74,13 @@ function Reservas() {
     }),
   ]);
 
-  autoTable(doc, {
-    head: [tableColumn],
-    body: tableRows,
-    startY: 30,
+  autoTable(doc, { // genera una tabla en el pdf
+    head: [tableColumn], // donde la cabecera será eso
+    body: tableRows, // el cuerpo
+    startY: 30, // La tabla empezará en la altura 30.
   });
 
-  doc.save("reservas.pdf");
+  doc.save("Reservas.pdf"); // guarda el pdf como Reservas.pdf
   };
 
   return (
