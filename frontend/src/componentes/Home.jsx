@@ -102,56 +102,52 @@ function Home() {
           </div>
 
           <div className="home-list">
-
             {loading ? (
               <p className="texto-cargando">Cargando horarios...</p>
             ) : error ? (
               <p>{error}</p>
             ) : timeblocks.length === 0 ? (
-
               <div className="home-empty">
                 <p className="texto-error">No hay horarios disponibles.</p>
               </div>
-
             ) : (
+              timeblocks.map((timeblock) => {
+                const reservado = timeblock.appointments?.length > 0;
 
-              timeblocks.map((timeblock) => (
-
+              return (
                 <div key={timeblock.id} className="home-time-card">
-
                   <div className="home-time-card__content">
-
                     <div className="home-time-row">
                       <span className="home-time-label">Inicio</span>
-
-                      <strong>
-                        {new Date(timeblock.startTime).toLocaleString("es-ES", {
-                          timeZone: "Europe/Madrid"
-                        })}
-                      </strong>
+                        <strong>
+                          {new Date(timeblock.startTime).toLocaleString("es-ES", {
+                            timeZone: "Europe/Madrid",
+                          })}
+                        </strong>
                     </div>
 
-                    <div className="home-time-row">
-                      <span className="home-time-label">Fin</span>
-
+                  <div className="home-time-row">
+                    <span className="home-time-label">Fin</span>
                       <strong>
                         {new Date(timeblock.endTime).toLocaleString("es-ES", {
-                          timeZone: "Europe/Madrid"
+                          timeZone: "Europe/Madrid",
                         })}
                       </strong>
-                    </div>
-
                   </div>
-
-                  <button className="home-action primary">
-                    Reservar
-                  </button>
-
                 </div>
 
-              ))
+                <p className={`tb-reserved-text ${reservado ? "active" : "empty"}`}>
+                  {reservado ? "Horario reservado" : "Disponible"}
+                </p>
+
+                <button className="home-action primary" disabled={reservado}>
+                 Reservar
+                </button>
+                </div>
+              );
+            })
             )}
-        </div>
+          </div>
         </main>
 
         {/* MIS RESERVAS */}

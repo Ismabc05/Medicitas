@@ -421,6 +421,37 @@
   text-align: center;
 }
 
+.home-action.primary:disabled {
+  background: #dbe4ef;
+  color: #94a3b8;
+  cursor: not-allowed;
+  box-shadow: none;
+  opacity: 0.85;
+}
+
+.home-action.primary:disabled:hover {
+  transform: none;
+  background: #dbe4ef;
+}
+
+.tb-reserved-text {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: 999px;
+}
+
+.tb-reserved-text.active {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.tb-reserved-text.empty {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
 @media (max-width: 1024px) {
   .home-hero,
   .home-layout {
