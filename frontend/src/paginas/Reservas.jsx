@@ -4,83 +4,80 @@ import autoTable from "jspdf-autotable"; // Importa la función que genera tabla
 import "../estilos/reservas.css";
 
 function Reservas() {
-
-  const [ reservas, setReservas] = useState([])
-  const [ error, setError] = useState("")
-  const [ loading, setLoading] = useState(true)
+  const [reservas, setReservas] = useState([]);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-
     const fetchReservations = async () => {
       try {
-
         const token = localStorage.getItem("token");
 
         const response = await fetch(
           "https://curso-expressjs-production-a8af.up.railway.app/api/admin/reservations",
           {
             headers: {
-              Authorization: `Bearer ${token}`
+              Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
 
-        const data = await response.json()
+        const data = await response.json();
 
-        if(!response.ok) {
-          setError(data.error || "Error al cargar las reservas")
+        if (!response.ok) {
+          setError(data.error || "Error al cargar las reservas");
         }
 
-        setReservas(data)
-
+        setReservas(data);
       } catch (error) {
-        setError("Error de conexion con el servidor")
-      }  finally {
-        setLoading(false)
+        setError("Error de conexion con el servidor");
+      } finally {
+        setLoading(false);
       }
-    }
+    };
 
-    fetchReservations()
-
-  }, [])
+    fetchReservations();
+  }, []);
 
   const handleExportPDF = () => {
+    const doc = new jsPDF(); // crea el documento pdf
 
-  const doc = new jsPDF(); // crea el documento pdf
+    doc.setFontSize(18); // tiene un fuente de 18 px
 
-  doc.setFontSize(18); // tiene un fuente de 18 px
+    doc.text("Listado de Reservas", 14, 20); // escribe text en el pdf
 
-  doc.text("Listado de Reservas", 14, 20); // escribe text en el pdf
+    const tableColumn = [
+      // Define los nombres de las columnas.
+      "Usuario",
+      "Email",
+      "Inicio",
+      "Fin",
+    ];
 
-  const tableColumn = [ // Define los nombres de las columnas.
-    "Usuario",
-    "Email",
-    "Inicio",
-    "Fin"
-  ];
+    const tableRows = reservas.map((reserva) => [
+      // Recorre todas las reservas y crea una fila por cada una.
 
-  const tableRows = reservas.map((reserva) => [ // Recorre todas las reservas y crea una fila por cada una.
+      reserva.user.name,
 
-    reserva.user.name,
+      reserva.user.email,
 
-    reserva.user.email,
+      new Date(reserva.timeBlock.startTime).toLocaleString("es-ES", {
+        timeZone: "Europe/Madrid",
+      }),
 
-    new Date(reserva.timeBlock.startTime).toLocaleString("es-ES", {
-      timeZone: "Europe/Madrid"
-    }),
+      new Date(reserva.timeBlock.endTime).toLocaleString("es-ES", {
+        timeZone: "Europe/Madrid",
+      }),
+    ]);
 
-    new Date(reserva.timeBlock.endTime).toLocaleString("es-ES", {
-      timeZone: "Europe/Madrid"
-    }),
-  ]);
+    autoTable(doc, {
+      // genera una tabla en el pdf
+      head: [tableColumn], // donde la cabecera será eso
+      body: tableRows, // el cuerpo
+      startY: 30, // La tabla empezará en la altura 30.
+    });
 
-  autoTable(doc, { // genera una tabla en el pdf
-    head: [tableColumn], // donde la cabecera será eso
-    body: tableRows, // el cuerpo
-    startY: 30, // La tabla empezará en la altura 30.
-  });
-
-  doc.save("Reservas.pdf"); // guarda el pdf como Reservas.pdf
+    doc.save("Reservas.pdf"); // guarda el pdf como Reservas.pdf
   };
 
   return (
@@ -92,7 +89,9 @@ function Reservas() {
         </div>
 
         <div className="res-header-actions">
-          <button className="res-button" onClick={handleExportPDF}>Exportar</button>
+          <button className="res-button" onClick={handleExportPDF}>
+            Exportar
+          </button>
         </div>
       </div>
 
@@ -131,23 +130,23 @@ function Reservas() {
               ) : (
                 reservas.map((reserva) => (
                   <div key={reserva.id} className="reservation-card">
-                  <p>
-                    <strong>Usuario:</strong> {reserva.user.name}
-                  </p>
+                    <p>
+                      <strong>Usuario:</strong> {reserva.user.name}
+                    </p>
 
-                  <p>
-                    <strong>Email:</strong> {reserva.user.email}
-                  </p>
+                    <p>
+                      <strong>Email:</strong> {reserva.user.email}
+                    </p>
 
-                  <p>
-                    <strong>Inicio:</strong>{" "}
-                    {new Date(reserva.timeBlock.startTime).toLocaleString()}
-                  </p>
+                    <p>
+                      <strong>Inicio:</strong>{" "}
+                      {new Date(reserva.timeBlock.startTime).toLocaleString()}
+                    </p>
 
-                  <p>
-                    <strong>Fin:</strong>{" "}
-                    {new Date(reserva.timeBlock.endTime).toLocaleString()}
-                  </p>
+                    <p>
+                      <strong>Fin:</strong>{" "}
+                      {new Date(reserva.timeBlock.endTime).toLocaleString()}
+                    </p>
                   </div>
                 ))
               )}

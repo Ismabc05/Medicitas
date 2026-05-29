@@ -4,84 +4,79 @@ import { AiOutlineCloseCircle } from "react-icons/ai";
 import { jwtDecode } from "jwt-decode";
 
 function Home() {
-
-  const [ timeblocks, setTimeblocks ] = useState([])
-  const [ error, setError ] = useState("")
-  const [ loading, setLoading ] = useState(true)
+  const [timeblocks, setTimeblocks] = useState([]);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-
     const fetchTimeblocks = async () => {
+      try {
+        const token = localStorage.getItem("token");
 
-      try{
-
-        const token = localStorage.getItem("token")
-
-        const response = await fetch("https://curso-expressjs-production-a8af.up.railway.app/api/admin/time-blocks",
+        const response = await fetch(
+          "https://curso-expressjs-production-a8af.up.railway.app/api/admin/time-blocks",
           {
             headers: {
-              Authorization: `Bearer ${token}`
+              Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
 
-        const data = await response.json()
+        const data = await response.json();
 
-        if(!response.ok) {
-          setError(data.error || "Error al cargar los horarios")
+        if (!response.ok) {
+          setError(data.error || "Error al cargar los horarios");
           return;
         }
 
-        setTimeblocks(data)
-
-      }catch (error) {
-        setError("Error al conectarse con el servidor")
-      }finally {
-        setLoading(false)
+        setTimeblocks(data);
+      } catch (error) {
+        setError("Error al conectarse con el servidor");
+      } finally {
+        setLoading(false);
       }
-    }
+    };
 
-    fetchTimeblocks()
-
-  }, [])
+    fetchTimeblocks();
+  }, []);
 
   useEffect(() => {
-  const fetchUser = async () => {
-    try {
-      const token = localStorage.getItem("token");
+    const fetchUser = async () => {
+      try {
+        const token = localStorage.getItem("token");
 
-      if (!token) {
-        setError("No hay token disponible");
-        return;
-      }
-
-      const decoded = jwtDecode(token);
-      const id = decoded.id;
-
-      const response = await fetch(
-        `https://curso-expressjs-production-a8af.up.railway.app/api/users/${id}/user`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        if (!token) {
+          setError("No hay token disponible");
+          return;
         }
-      );
 
-      const data = await response.json();
+        const decoded = jwtDecode(token);
+        const id = decoded.id;
 
-      if (!response.ok) {
-        setError(data.error || "Error al cargar el usuario");
-        return;
+        const response = await fetch(
+          `https://curso-expressjs-production-a8af.up.railway.app/api/users/${id}/user`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          setError(data.error || "Error al cargar el usuario");
+          return;
+        }
+
+        setUser(data);
+      } catch (error) {
+        setError("Error al conectarse con el servidor");
       }
+    };
 
-      setUser(data);
-    } catch (error) {
-      setError("Error al conectarse con el servidor");
-    }
-  };
-
-  fetchUser();
+    fetchUser();
   }, []);
 
   return (
@@ -106,12 +101,18 @@ function Home() {
           <button className="home-user-mini__icon" aria-label="Cambiar email">
             @
           </button>
-          <button className="home-user-mini__icon" aria-label="Cambiar contraseña">
+          <button
+            className="home-user-mini__icon"
+            aria-label="Cambiar contraseña"
+          >
             🔒
           </button>
-          <button className="home-user-mini__icon danger" aria-label="Cerrar sesión">
+          <button
+            className="home-user-mini__icon danger"
+            aria-label="Cerrar sesión"
+          >
             <AiOutlineCloseCircle />
-            </button>
+          </button>
         </div>
       </header>
 
@@ -131,7 +132,6 @@ function Home() {
       </section>
 
       <section className="home-layout">
-
         {/* HORARIOS DISPONIBLES */}
         <main className="home-panel home-schedule">
           <div className="home-panel__header">
@@ -154,38 +154,46 @@ function Home() {
               timeblocks.map((timeblock) => {
                 const reservado = timeblock.appointments?.length > 0;
 
-              return (
-                <div key={timeblock.id} className="home-time-card">
-                  <div className="home-time-card__content">
-                    <div className="home-time-row">
-                      <span className="home-time-label">Inicio</span>
+                return (
+                  <div key={timeblock.id} className="home-time-card">
+                    <div className="home-time-card__content">
+                      <div className="home-time-row">
+                        <span className="home-time-label">Inicio</span>
                         <strong>
-                          {new Date(timeblock.startTime).toLocaleString("es-ES", {
+                          {new Date(timeblock.startTime).toLocaleString(
+                            "es-ES",
+                            {
+                              timeZone: "Europe/Madrid",
+                            },
+                          )}
+                        </strong>
+                      </div>
+
+                      <div className="home-time-row">
+                        <span className="home-time-label">Fin</span>
+                        <strong>
+                          {new Date(timeblock.endTime).toLocaleString("es-ES", {
                             timeZone: "Europe/Madrid",
                           })}
                         </strong>
+                      </div>
                     </div>
 
-                  <div className="home-time-row">
-                    <span className="home-time-label">Fin</span>
-                      <strong>
-                        {new Date(timeblock.endTime).toLocaleString("es-ES", {
-                          timeZone: "Europe/Madrid",
-                        })}
-                      </strong>
+                    <p
+                      className={`tb-reserved-text ${reservado ? "active" : "empty"}`}
+                    >
+                      {reservado ? "Horario reservado" : "Disponible"}
+                    </p>
+
+                    <button
+                      className="home-action primary"
+                      disabled={reservado}
+                    >
+                      Reservar
+                    </button>
                   </div>
-                </div>
-
-                <p className={`tb-reserved-text ${reservado ? "active" : "empty"}`}>
-                  {reservado ? "Horario reservado" : "Disponible"}
-                </p>
-
-                <button className="home-action primary" disabled={reservado}>
-                 Reservar
-                </button>
-                </div>
-              );
-            })
+                );
+              })
             )}
           </div>
         </main>
@@ -200,44 +208,51 @@ function Home() {
           </div>
 
           <div className="home-reservations-list">
+            {user?.appointments?.length > 0 ? (
+              user.appointments.map((appointment) => (
+                <div key={appointment.id} className="home-reservation-card">
+                  <div className="home-reservation-info">
+                    <span className="home-time-label">Reserva</span>
+                    <strong>
+                      {new Date(appointment.timeBlock.startTime).toLocaleString(
+                        "es-ES",
+                        {
+                          timeZone: "Europe/Madrid",
+                        },
+                      )}{" "}
+                      -{" "}
+                      {new Date(appointment.timeBlock.endTime).toLocaleString(
+                        "es-ES",
+                        {
+                          timeZone: "Europe/Madrid",
+                        },
+                      )}
+                    </strong>
+                  </div>
 
-            <div className="home-reservation-card">
-              <div className="home-reservation-info">
-                <span className="home-time-label">Reserva</span>
-                <strong>1/6/2026, 11:00 - 12:00</strong>
+                  <div className="home-reservation-actions">
+                    <button
+                      className="home-icon-btn"
+                      aria-label="Editar reserva"
+                    >
+                      ✎
+                    </button>
+                    <button
+                      className="home-icon-btn danger"
+                      aria-label="Eliminar reserva"
+                    >
+                      <AiOutlineCloseCircle />
+                    </button>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="home-empty-small">
+                <p>No tienes reservas todavía.</p>
               </div>
-
-              <div className="home-reservation-actions">
-                <button className="home-icon-btn" aria-label="Editar reserva">
-                  ✎
-                </button>
-
-                <button className="home-icon-btn danger" aria-label="Eliminar reserva">
-                  <AiOutlineCloseCircle />
-                </button>
-              </div>
-            </div>
-
-            <div className="home-reservation-card">
-              <div className="home-reservation-info">
-                <span className="home-time-label">Reserva</span>
-                <strong>2/6/2026, 16:00 - 17:00</strong>
-              </div>
-
-              <div className="home-reservation-actions">
-                <button className="home-icon-btn" aria-label="Editar reserva">
-                  ✎
-                </button>
-
-                <button className="home-icon-btn danger" aria-label="Eliminar reserva">
-                  <AiOutlineCloseCircle />
-                </button>
-              </div>
-            </div>
-
+            )}
           </div>
         </aside>
-
       </section>
     </section>
   );

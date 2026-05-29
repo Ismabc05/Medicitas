@@ -11,7 +11,8 @@ export default function Register() {
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const [form, setForm] = useState({ // este estado se encarga de guardar los valores de los inputs
+  const [form, setForm] = useState({
+    // este estado se encarga de guardar los valores de los inputs
     name: "",
     email: "",
     password: "",
@@ -24,12 +25,14 @@ export default function Register() {
   };
 
   const handleChange = (event) => {
-    setForm({ // actualizamos el estado con
+    setForm({
+      // actualizamos el estado con
       ...form, // lo que tenia antes
       [event.target.id]: event.target.value, // a cada id le agregamos el value
     });
 
-    setErrors((prev) => ({ // tambien actualizamos setErrors
+    setErrors((prev) => ({
+      // tambien actualizamos setErrors
       ...prev, // lo que tenia antes
       [event.target.id]: "", // y lo dejamos en blanco
     }));
@@ -40,7 +43,8 @@ export default function Register() {
 
     const validationErrors = validateRegister(form); // le pasa el estado a la funcion para validar si hay errores
 
-    if (Object.keys(validationErrors).length > 0) { // si la longitud de validationErrors es mayor que 0
+    if (Object.keys(validationErrors).length > 0) {
+      // si la longitud de validationErrors es mayor que 0
       setErrors(validationErrors); /// actualizamos el estado con esos errores
       return;
     }
@@ -52,19 +56,21 @@ export default function Register() {
     setLoading(true);
 
     try {
-      const response = await fetch( // hacemos la peticion
+      const response = await fetch(
+        // hacemos la peticion
         "https://curso-expressjs-production-a8af.up.railway.app/api/auth/register",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ // le enviamos como cuerpo el estado donde guardamos los valores del input
+          body: JSON.stringify({
+            // le enviamos como cuerpo el estado donde guardamos los valores del input
             name: form.name,
             email: form.email,
             password: form.password,
           }),
-        }
+        },
       );
 
       const data = await response.json(); // en data guardamos la respuesta del servidor

@@ -62,7 +62,7 @@ export default function Login() {
             email: form.email,
             password: form.password,
           }),
-        }
+        },
       );
 
       const data = await response.json();
@@ -134,7 +134,7 @@ export default function Login() {
                 className="toggle-password"
                 onClick={togglePassword}
               >
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
             </div>
 
@@ -142,11 +142,7 @@ export default function Login() {
           </div>
 
           <button type="submit" className="login-button" disabled={loading}>
-            {loading ? (
-              <span className="button-loader"></span>
-            ) : (
-              "Ingresar"
-            )}
+            {loading ? <span className="button-loader"></span> : "Ingresar"}
           </button>
 
           {error && <p className="error-text">{error}</p>}
