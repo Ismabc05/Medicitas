@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import "../estilos/home.css";
 import { AiOutlineCloseCircle } from "react-icons/ai";
+import { jwtDecode } from "jwt-decode";
 
 function Home() {
 
   const [ timeblocks, setTimeblocks ] = useState([])
   const [ error, setError ] = useState("")
   const [ loading, setLoading ] = useState(true)
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
 
@@ -44,6 +46,44 @@ function Home() {
 
   }, [])
 
+  useEffect(() => {
+  const fetchUser = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        setError("No hay token disponible");
+        return;
+      }
+
+      const decoded = jwtDecode(token);
+      const id = decoded.id;
+
+      const response = await fetch(
+        `https://curso-expressjs-production-a8af.up.railway.app/api/users/${id}/user`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || "Error al cargar el usuario");
+        return;
+      }
+
+      setUser(data);
+    } catch (error) {
+      setError("Error al conectarse con el servidor");
+    }
+  };
+
+  fetchUser();
+  }, []);
+
   return (
     <section className="home-page">
       <header className="home-topbar">
@@ -56,8 +96,8 @@ function Home() {
         <div className="home-user-mini">
           <div className="home-avatar">I</div>
           <div className="home-user-mini__info">
-            <strong>Ismael Bedmar</strong>
-            <span>ismael@example.com</span>
+            <strong>{user?.name}</strong>
+            <span>{user?.email}</span>
           </div>
 
           <button className="home-user-mini__icon" aria-label="Cambiar nombre">
