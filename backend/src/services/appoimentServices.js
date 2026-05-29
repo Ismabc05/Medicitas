@@ -15,3 +15,28 @@ exports.listAppoiments = async ( userId ) => {
         throw new Error ("Error al obtener el historial de citas")
     }
 }
+
+exports.getUserById = async (userId) => {
+
+    try {
+
+        const user = await prisma.user.findUnique({
+            where: {
+                id: parseInt(userId, 10)
+            },
+
+            include: {
+                appointments: {
+                    include: {
+                        timeBlock: true
+                    }
+                }
+            }
+        })
+
+        return user
+
+    } catch (error) {
+        throw new Error("Error al obtener el usuario")
+    }
+}

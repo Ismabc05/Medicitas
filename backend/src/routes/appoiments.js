@@ -5,5 +5,6 @@ const appoimentController = require("../controllers/appoimentController")
 const router = Router()
 
 router.get("/:id/appoiment", authenticateToken, appoimentController.getUserAppoiment)
+router.get("/:id/user", authenticateToken, appoimentController.getUser)
 
 module.exports = router
