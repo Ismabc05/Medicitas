@@ -79,6 +79,44 @@ function Home() {
     fetchUser();
   }, []);
 
+  const handleToReservation = async (timeBlockId, userId) => {
+  try {
+    const token = localStorage.getItem("token");
+
+    const response = await fetch(
+      "https://curso-expressjs-production-a8af.up.railway.app/api/reservations/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          date: new Date().toISOString(),
+          timeBlockId,
+          userId,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      setError(data.error || "Error al crear la reserva");
+      return;
+    }
+
+    // actualizar usuario con la nueva reserva
+    setUser((prev) => ({
+      ...prev,
+      appointments: [...prev.appointments, data],
+    }));
+
+  } catch (error) {
+    setError("Error al crear la nueva reserva");
+  }
+};
+
   return (
     <section className="home-page">
       <header className="home-topbar">
@@ -188,6 +226,7 @@ function Home() {
                     <button
                       className="home-action primary"
                       disabled={reservado}
+                      onClick={() => {handleToReservation(timeblock.id, user.id)}}
                     >
                       Reservar
                     </button>

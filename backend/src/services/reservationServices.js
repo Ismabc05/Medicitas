@@ -1,19 +1,25 @@
 const { PrismaClient } = require("../../../generated/prisma")
 const prisma = new PrismaClient();
 
-exports.createReservation = async ( data ) => {
-    const conflict = await prisma.appointment.findFirst({ // busca en la tabla appointment un elemento que coincida con esa fecha o que tenga el mismo id
-       where: {
-        date: data.date,
-        timeBlockId: data.timeBlockId
+exports.createReservation = async (data) => {
+
+    const conflict = await prisma.appointment.findFirst({
+        where: {
+            date: data.date,
+            timeBlockId: data.timeBlockId
         }
     })
 
-    if(conflict) {
+    if (conflict) {
         throw new Error("El horario ya está ocupado")
     }
 
-    return prisma.appointment.create({data}) // creamos la reserva en la tabla appoiment
+    return prisma.appointment.create({
+        data,
+        include: {
+            timeBlock: true,
+        },
+    })
 }
 
 exports.getReservation = async ( id ) => {
