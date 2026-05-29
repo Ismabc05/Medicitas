@@ -413,6 +413,14 @@
   color: #0f172a;
 }
 
+.texto-cargando {
+  text-align: center;
+}
+
+.texto-error {
+  text-align: center;
+}
+
 @media (max-width: 1024px) {
   .home-hero,
   .home-layout {

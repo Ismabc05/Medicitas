@@ -1,8 +1,49 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../estilos/home.css";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 
 function Home() {
+
+  const [ timeblocks, setTimeblocks ] = useState([])
+  const [ error, setError ] = useState("")
+  const [ loading, setLoading ] = useState(true)
+
+  useEffect(() => {
+
+    const fetchTimeblocks = async () => {
+
+      try{
+
+        const token = localStorage.getItem("token")
+
+        const response = await fetch("https://curso-expressjs-production-a8af.up.railway.app/api/admin/time-blocks",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            },
+          }
+        );
+
+        const data = await response.json()
+
+        if(!response.ok) {
+          setError(data.error || "Error al cargar los horarios")
+          return;
+        }
+
+        setTimeblocks(data)
+
+      }catch (error) {
+        setError("Error al conectarse con el servidor")
+      }finally {
+        setLoading(false)
+      }
+    }
+
+    fetchTimeblocks()
+
+  }, [])
+
   return (
     <section className="home-page">
       <header className="home-topbar">
@@ -61,42 +102,56 @@ function Home() {
           </div>
 
           <div className="home-list">
-            <div className="home-time-card">
-              <div className="home-time-card__content">
-                <div className="home-time-row">
-                  <span className="home-time-label">Inicio</span>
-                  <strong>1/6/2026, 11:00</strong>
-                </div>
 
-                <div className="home-time-row">
-                  <span className="home-time-label">Fin</span>
-                  <strong>1/6/2026, 12:00</strong>
-                </div>
+            {loading ? (
+              <p className="texto-cargando">Cargando horarios...</p>
+            ) : error ? (
+              <p>{error}</p>
+            ) : timeblocks.length === 0 ? (
+
+              <div className="home-empty">
+                <p className="texto-error">No hay horarios disponibles.</p>
               </div>
 
-              <button className="home-action primary">Reservar</button>
-            </div>
+            ) : (
 
-            <div className="home-time-card">
-              <div className="home-time-card__content">
-                <div className="home-time-row">
-                  <span className="home-time-label">Inicio</span>
-                  <strong>1/6/2026, 12:00</strong>
+              timeblocks.map((timeblock) => (
+
+                <div key={timeblock.id} className="home-time-card">
+
+                  <div className="home-time-card__content">
+
+                    <div className="home-time-row">
+                      <span className="home-time-label">Inicio</span>
+
+                      <strong>
+                        {new Date(timeblock.startTime).toLocaleString("es-ES", {
+                          timeZone: "Europe/Madrid"
+                        })}
+                      </strong>
+                    </div>
+
+                    <div className="home-time-row">
+                      <span className="home-time-label">Fin</span>
+
+                      <strong>
+                        {new Date(timeblock.endTime).toLocaleString("es-ES", {
+                          timeZone: "Europe/Madrid"
+                        })}
+                      </strong>
+                    </div>
+
+                  </div>
+
+                  <button className="home-action primary">
+                    Reservar
+                  </button>
+
                 </div>
 
-                <div className="home-time-row">
-                  <span className="home-time-label">Fin</span>
-                  <strong>1/6/2026, 13:00</strong>
-                </div>
-              </div>
-
-              <button className="home-action primary">Reservar</button>
-            </div>
-
-            <div className="home-empty">
-              <p>Aquí aparecerán más bloques disponibles.</p>
-            </div>
-          </div>
+              ))
+            )}
+        </div>
         </main>
 
         {/* MIS RESERVAS */}
