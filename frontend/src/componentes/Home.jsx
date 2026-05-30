@@ -80,40 +80,98 @@ function Home() {
   }, []);
 
   const handleToReservation = async (timeBlockId, userId) => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(
+        "https://curso-expressjs-production-a8af.up.railway.app/api/reservations/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            date: new Date().toISOString(),
+            timeBlockId,
+            userId,
+          }),
+        },
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || "Error al crear la reserva");
+        return;
+      }
+
+      // actualizar usuario con la nueva reserva
+      setUser((prev) => ({
+        ...prev,
+        appointments: [...prev.appointments, data],
+      }));
+
+      setTimeblocks((prev) =>
+        prev.map((tb) =>
+          tb.id === timeBlockId
+            ? {
+                ...tb,
+                appointments: [data],
+              }
+            : tb,
+        ),
+      );
+    } catch (error) {
+      setError("Error al crear la nueva reserva");
+    }
+  };
+
+ const handleToDeleteReservation = async (id) => {
   try {
     const token = localStorage.getItem("token");
 
+    const appointmentToDelete = user.appointments.find(
+      (appointment) => appointment.id === id
+    );
+
+    const timeBlockId = appointmentToDelete.timeBlockId;
+
     const response = await fetch(
-      "https://curso-expressjs-production-a8af.up.railway.app/api/reservations/",
+      `https://curso-expressjs-production-a8af.up.railway.app/api/reservations/${id}`,
       {
-        method: "POST",
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          date: new Date().toISOString(),
-          timeBlockId,
-          userId,
-        }),
       }
     );
 
-    const data = await response.json();
-
     if (!response.ok) {
-      setError(data.error || "Error al crear la reserva");
+      setError("Error al eliminar la reserva");
       return;
     }
 
-    // actualizar usuario con la nueva reserva
     setUser((prev) => ({
       ...prev,
-      appointments: [...prev.appointments, data],
+      appointments: prev.appointments.filter(
+        (appointment) => appointment.id !== id
+      ),
     }));
 
+    setTimeblocks((prev) =>
+      prev.map((tb) =>
+        tb.id === timeBlockId
+          ? {
+              ...tb,
+              appointments: [],
+            }
+          : tb
+      )
+    );
   } catch (error) {
-    setError("Error al crear la nueva reserva");
+    setError("Error al eliminar la reserva");
   }
 };
 
@@ -226,7 +284,9 @@ function Home() {
                     <button
                       className="home-action primary"
                       disabled={reservado}
-                      onClick={() => {handleToReservation(timeblock.id, user.id)}}
+                      onClick={() => {
+                        handleToReservation(timeblock.id, user.id);
+                      }}
                     >
                       Reservar
                     </button>
@@ -279,15 +339,16 @@ function Home() {
                     <button
                       className="home-icon-btn danger"
                       aria-label="Eliminar reserva"
+                      onClick={() => {handleToDeleteReservation(appointment.id)}}
                     >
-                      <AiOutlineCloseCircle />
+                      <AiOutlineCloseCircle/>
                     </button>
                   </div>
                 </div>
               ))
             ) : (
               <div className="home-empty-small">
-                <p>No tienes reservas todavía.</p>
+                <p>Cargando...</p>
               </div>
             )}
           </div>

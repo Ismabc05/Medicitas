@@ -452,6 +452,10 @@
   color: #0369a1;
 }
 
+.home-empty-small {
+  text-align: center;
+}
+
 @media (max-width: 1024px) {
   .home-hero,
   .home-layout {
