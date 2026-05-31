@@ -8,7 +8,7 @@ const errorMiddleware = require("./middlewares/errorHandler")
 const app = express()
 
 app.use(cors()); // y así es como se usa
-app.use(express.json())
+app.use(express.json()) // sirve para poder leer en formato json
 app.use(loggerMiddleware)
 app.use("/api", routes) // las rutas serian /api/...
 
