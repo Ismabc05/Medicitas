@@ -331,12 +331,6 @@ function Home() {
 
                   <div className="home-reservation-actions">
                     <button
-                      className="home-icon-btn"
-                      aria-label="Editar reserva"
-                    >
-                      ✎
-                    </button>
-                    <button
                       className="home-icon-btn danger"
                       aria-label="Eliminar reserva"
                       onClick={() => {handleToDeleteReservation(appointment.id)}}

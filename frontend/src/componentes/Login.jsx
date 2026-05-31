@@ -13,6 +13,7 @@ export default function Login() {
     email: "",
     password: "",
   });
+
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePassword = () => {
@@ -83,6 +84,7 @@ export default function Login() {
         }
         setLoading(false);
       }, 2000);
+      
     } catch (error) {
       setError("Error de conexion con el servidor");
       setLoading(false);
