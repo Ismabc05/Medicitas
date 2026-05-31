@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import "../estilos/home.css";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
   const [timeblocks, setTimeblocks] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
+  const navegar = useNavigate()
 
   useEffect(() => {
     const fetchTimeblocks = async () => {
@@ -127,7 +129,7 @@ function Home() {
     }
   };
 
- const handleToDeleteReservation = async (id) => {
+  const handleToDeleteReservation = async (id) => {
   try {
     const token = localStorage.getItem("token");
 
@@ -173,7 +175,17 @@ function Home() {
   } catch (error) {
     setError("Error al eliminar la reserva");
   }
-};
+  };
+
+  const handleToCloseSession = (event) => {
+    
+    event.preventDefault()
+    localStorage.removeItem("token")
+    localStorage.removeItem("user")
+    navegar("/")
+
+  }
+
 
   return (
     <section className="home-page">
@@ -206,6 +218,7 @@ function Home() {
           <button
             className="home-user-mini__icon danger"
             aria-label="Cerrar sesión"
+            onClick={handleToCloseSession}
           >
             <AiOutlineCloseCircle />
           </button>
