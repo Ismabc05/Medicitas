@@ -206,6 +206,21 @@ function Home() {
     navegar("/");
   };
 
+  const nextAvailableTimeblock = timeblocks
+    .filter((tb) => !tb.appointments || tb.appointments.length === 0)
+    .sort((a, b) => new Date(a.startTime) - new Date(b.startTime))[0];
+
+  const nextAvailableText = nextAvailableTimeblock
+    ? new Date(nextAvailableTimeblock.startTime).toLocaleString("es-ES", {
+        weekday: "long",
+        day: "2-digit",
+        month: "long",
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: "Europe/Madrid",
+      })
+    : "No hay disponibilidad";
+
   return (
     <section className="home-page">
       <header className="home-topbar">
@@ -223,7 +238,7 @@ function Home() {
           ) : (
             <>
               <div className="home-avatar">
-                {user?.name?.charAt(0)?.toUpperCase() || "U"}
+                {user?.name?.charAt(0)?.toUpperCase() || "I"}
               </div>
 
               <div className="home-user-mini__info">
@@ -268,8 +283,9 @@ function Home() {
 
         <div className="home-hero__card">
           <span>Próxima disponibilidad</span>
-          <strong>Hoy, 14:00</strong>
-          <p>Bloques abiertos para reservar ahora mismo.</p>
+
+          <strong>{nextAvailableText}</strong>
+
         </div>
       </section>
 
