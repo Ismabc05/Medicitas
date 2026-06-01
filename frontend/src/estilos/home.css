@@ -56,6 +56,12 @@
   font-size: 14px;
 }
 
+.home-user-mini__info p {
+  display: block;
+  font-size: 14px;
+  padding: 0 8px;
+}
+
 .home-user-mini__info span {
   display: block;
   font-size: 12px;

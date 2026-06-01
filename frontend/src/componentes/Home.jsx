@@ -6,10 +6,14 @@ import { useNavigate } from "react-router-dom";
 
 function Home() {
   const [timeblocks, setTimeblocks] = useState([]);
-  const [error, setError] = useState("");
+  const [errorTimeblock, setErrorTimeblock] = useState("");
+  const [errorReservation, setErrorReservation] = useState("");
+  const [errorReservationCreate, setErrorReservationCreate] = useState("");
+  const [errorReservationDelete, setErrorReservationDelete] = useState("");
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
-  const navegar = useNavigate()
+  const navegar = useNavigate();
 
   useEffect(() => {
     const fetchTimeblocks = async () => {
@@ -28,13 +32,13 @@ function Home() {
         const data = await response.json();
 
         if (!response.ok) {
-          setError(data.error || "Error al cargar los horarios");
+          setErrorTimeblock(data.error || "Error al cargar los horarios");
           return;
         }
 
         setTimeblocks(data);
       } catch (error) {
-        setError("Error al conectarse con el servidor");
+        setErrorTimeblock("Error al conectarse con el servidor");
       } finally {
         setLoading(false);
       }
@@ -49,7 +53,7 @@ function Home() {
         const token = localStorage.getItem("token");
 
         if (!token) {
-          setError("No hay token disponible");
+          setErrorReservation("No hay token disponible");
           return;
         }
 
@@ -68,13 +72,15 @@ function Home() {
         const data = await response.json();
 
         if (!response.ok) {
-          setError(data.error || "Error al cargar el usuario");
+          setErrorReservation(data.error || "Error al cargar el usuario");
           return;
         }
 
         setUser(data);
       } catch (error) {
-        setError("Error al conectarse con el servidor");
+        setErrorReservation("Error al conectarse con el servidor");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -104,9 +110,17 @@ function Home() {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || "Error al crear la reserva");
+        setErrorReservationCreate(data.error || "Error al crear la reserva");
         return;
       }
+
+      setErrorReservationCreate("");
+      setSuccess("La reserva se ha creado correctamente.");
+
+      setTimeout(() => {
+        setSuccess("");
+        setErrorReservationCreate("");
+      }, 3000);
 
       // actualizar usuario con la nueva reserva
       setUser((prev) => ({
@@ -125,67 +139,72 @@ function Home() {
         ),
       );
     } catch (error) {
-      setError("Error al crear la nueva reserva");
+      setErrorReservationCreate("Error al crear la nueva reserva");
     }
   };
 
   const handleToDeleteReservation = async (id) => {
-  try {
-    const token = localStorage.getItem("token");
+    try {
+      const token = localStorage.getItem("token");
 
-    const appointmentToDelete = user.appointments.find(
-      (appointment) => appointment.id === id
-    );
+      const appointmentToDelete = user.appointments.find(
+        (appointment) => appointment.id === id,
+      );
 
-    const timeBlockId = appointmentToDelete.timeBlockId;
+      const timeBlockId = appointmentToDelete.timeBlockId;
 
-    const response = await fetch(
-      `https://curso-expressjs-production-a8af.up.railway.app/api/reservations/${id}`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        `https://curso-expressjs-production-a8af.up.railway.app/api/reservations/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         },
+      );
+
+      if (!response.ok) {
+        setErrorReservationDelete("Error al eliminar la reserva");
+        return;
       }
-    );
 
-    if (!response.ok) {
-      setError("Error al eliminar la reserva");
-      return;
+      setErrorReservationDelete("");
+      setSuccess("La reserva se ha eliminado correctamente.");
+
+      setTimeout(() => {
+        setSuccess("");
+        setErrorReservationDelete("");
+      }, 3000);
+
+      setUser((prev) => ({
+        ...prev,
+        appointments: prev.appointments.filter(
+          (appointment) => appointment.id !== id,
+        ),
+      }));
+
+      setTimeblocks((prev) =>
+        prev.map((tb) =>
+          tb.id === timeBlockId
+            ? {
+                ...tb,
+                appointments: [],
+              }
+            : tb,
+        ),
+      );
+    } catch (error) {
+      setErrorReservationDelete("Error al eliminar la reserva");
     }
-
-    setUser((prev) => ({
-      ...prev,
-      appointments: prev.appointments.filter(
-        (appointment) => appointment.id !== id
-      ),
-    }));
-
-    setTimeblocks((prev) =>
-      prev.map((tb) =>
-        tb.id === timeBlockId
-          ? {
-              ...tb,
-              appointments: [],
-            }
-          : tb
-      )
-    );
-  } catch (error) {
-    setError("Error al eliminar la reserva");
-  }
   };
 
   const handleToCloseSession = (event) => {
-    
-    event.preventDefault()
-    localStorage.removeItem("token")
-    localStorage.removeItem("user")
-    navegar("/")
-
-  }
-
+    event.preventDefault();
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navegar("/");
+  };
 
   return (
     <section className="home-page">
@@ -197,24 +216,38 @@ function Home() {
         </div>
 
         <div className="home-user-mini">
-          <div className="home-avatar">I</div>
-          <div className="home-user-mini__info">
-            <strong>{user?.name}</strong>
-            <span>{user?.email}</span>
-          </div>
+          {loading ? (
+            <div className="home-user-mini__info">
+              <p>Cargando usuario...</p>
+            </div>
+          ) : (
+            <>
+              <div className="home-avatar">
+                {user?.name?.charAt(0)?.toUpperCase() || "U"}
+              </div>
+
+              <div className="home-user-mini__info">
+                <strong>{user?.name}</strong>
+                <span>{user?.email}</span>
+              </div>
+            </>
+          )}
 
           <button className="home-user-mini__icon" aria-label="Cambiar nombre">
             ✎
           </button>
+
           <button className="home-user-mini__icon" aria-label="Cambiar email">
             @
           </button>
+
           <button
             className="home-user-mini__icon"
             aria-label="Cambiar contraseña"
           >
             🔒
           </button>
+
           <button
             className="home-user-mini__icon danger"
             aria-label="Cerrar sesión"
@@ -253,8 +286,8 @@ function Home() {
           <div className="home-list">
             {loading ? (
               <p className="texto-cargando">Cargando horarios...</p>
-            ) : error ? (
-              <p>{error}</p>
+            ) : errorTimeblock ? (
+              <p>{errorTimeblock}</p>
             ) : timeblocks.length === 0 ? (
               <div className="home-empty">
                 <p className="texto-error">No hay horarios disponibles.</p>
@@ -346,13 +379,19 @@ function Home() {
                     <button
                       className="home-icon-btn danger"
                       aria-label="Eliminar reserva"
-                      onClick={() => {handleToDeleteReservation(appointment.id)}}
+                      onClick={() => {
+                        handleToDeleteReservation(appointment.id);
+                      }}
                     >
-                      <AiOutlineCloseCircle/>
+                      <AiOutlineCloseCircle />
                     </button>
                   </div>
                 </div>
               ))
+            ) : user ? (
+              <div className="home-empty-small">
+                {errorReservation || "No tienes ninguna reserva disponible."}
+              </div>
             ) : (
               <div className="home-empty-small">
                 <p>Cargando...</p>
@@ -361,6 +400,23 @@ function Home() {
           </div>
         </aside>
       </section>
+      {success && (
+        <div className="success-toast">
+          <p className="success-toast__text">{success}</p>
+        </div>
+      )}
+
+      {errorReservationCreate && (
+        <div className="success-toast-error">
+          <p className="success-toast__text">{errorReservationCreate}</p>
+        </div>
+      )}
+
+      {errorReservationDelete && (
+        <div className="success-toast-error">
+          <p className="success-toast__text">{errorReservationDelete}</p>
+        </div>
+      )}
     </section>
   );
 }
