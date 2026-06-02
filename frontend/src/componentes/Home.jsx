@@ -14,6 +14,15 @@ function Home() {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
   const navegar = useNavigate();
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 4;
+
+  const totalPages = Math.ceil(timeblocks.length / itemsPerPage);
+
+  const visibleTimeblocks = timeblocks.slice(
+    currentPage * itemsPerPage,
+    (currentPage + 1) * itemsPerPage,
+  );
 
   useEffect(() => {
     const fetchTimeblocks = async () => {
@@ -211,22 +220,22 @@ function Home() {
     .sort((a, b) => new Date(a.startTime) - new Date(b.startTime))[0]; // los ordena desde el mas cercano al mas lejano y nos quedamos con el primero
 
   const nextAvailableText = nextAvailableTimeblock
-  ? (() => {
-      const text = new Date(nextAvailableTimeblock.startTime).toLocaleString(
-        "es-ES",
-        {
-          weekday: "long",
-          day: "2-digit",
-          month: "long",
-          hour: "2-digit",
-          minute: "2-digit",
-          timeZone: "Europe/Madrid",
-        }
-      );
+    ? (() => {
+        const text = new Date(nextAvailableTimeblock.startTime).toLocaleString(
+          "es-ES",
+          {
+            weekday: "long",
+            day: "2-digit",
+            month: "long",
+            hour: "2-digit",
+            minute: "2-digit",
+            timeZone: "Europe/Madrid",
+          },
+        );
 
-      return text.charAt(0).toUpperCase() + text.slice(1);
-    })()
-  : "No hay disponibilidad";
+        return text.charAt(0).toUpperCase() + text.slice(1);
+      })()
+    : "No hay disponibilidad";
 
   return (
     <section className="home-page">
@@ -245,7 +254,8 @@ function Home() {
           ) : (
             <>
               <div className="home-avatar">
-                {user?.name?.charAt(0)?.toUpperCase() || "I"} {/* obtiene el nombre del usuario y chartAt coge la primera letra y la convierte en mayuscula */}
+                {user?.name?.charAt(0)?.toUpperCase() || "I"}{" "}
+                {/* obtiene el nombre del usuario y chartAt coge la primera letra y la convierte en mayuscula */}
               </div>
 
               <div className="home-user-mini__info">
@@ -292,7 +302,6 @@ function Home() {
           <span>Próxima disponibilidad</span>
 
           <strong>{nextAvailableText}</strong>
-
         </div>
       </section>
 
@@ -316,52 +325,79 @@ function Home() {
                 <p className="texto-error">No hay horarios disponibles.</p>
               </div>
             ) : (
-              timeblocks.map((timeblock) => {
-                const reservado = timeblock.appointments?.length > 0;
+              <>
+                {visibleTimeblocks.map((timeblock) => {
+                  const reservado = timeblock.appointments?.length > 0;
 
-                return (
-                  <div key={timeblock.id} className="home-time-card">
-                    <div className="home-time-card__content">
-                      <div className="home-time-row">
-                        <span className="home-time-label">Inicio</span>
-                        <strong>
-                          {new Date(timeblock.startTime).toLocaleString(
-                            "es-ES",
-                            {
-                              timeZone: "Europe/Madrid",
-                            },
-                          )}
-                        </strong>
+                  return (
+                    <div key={timeblock.id} className="home-time-card">
+                      <div className="home-time-card__content">
+                        <div className="home-time-row">
+                          <span className="home-time-label">Inicio</span>
+                          <strong>
+                            {new Date(timeblock.startTime).toLocaleString(
+                              "es-ES",
+                              {
+                                timeZone: "Europe/Madrid",
+                              },
+                            )}
+                          </strong>
+                        </div>
+
+                        <div className="home-time-row">
+                          <span className="home-time-label">Fin</span>
+                          <strong>
+                            {new Date(timeblock.endTime).toLocaleString(
+                              "es-ES",
+                              {
+                                timeZone: "Europe/Madrid",
+                              },
+                            )}
+                          </strong>
+                        </div>
                       </div>
 
-                      <div className="home-time-row">
-                        <span className="home-time-label">Fin</span>
-                        <strong>
-                          {new Date(timeblock.endTime).toLocaleString("es-ES", {
-                            timeZone: "Europe/Madrid",
-                          })}
-                        </strong>
-                      </div>
+                      <p
+                        className={`tb-reserved-text ${reservado ? "active" : "empty"}`}
+                      >
+                        {reservado ? "Horario reservado" : "Disponible"}
+                      </p>
+
+                      <button
+                        className="home-action primary"
+                        disabled={reservado}
+                        onClick={() => {
+                          handleToReservation(timeblock.id, user.id);
+                        }}
+                      >
+                        Reservar
+                      </button>
                     </div>
+                  );
+                })}
 
-                    <p
-                      className={`tb-reserved-text ${reservado ? "active" : "empty"}`}
-                    >
-                      {reservado ? "Horario reservado" : "Disponible"}
-                    </p>
+                <div className="home-pagination">
+                  <button
+                    className="home-pagination-btn"
+                    disabled={currentPage === 0}
+                    onClick={() => setCurrentPage((prev) => prev - 1)}
+                  >
+                    ←
+                  </button>
 
-                    <button
-                      className="home-action primary"
-                      disabled={reservado}
-                      onClick={() => {
-                        handleToReservation(timeblock.id, user.id);
-                      }}
-                    >
-                      Reservar
-                    </button>
-                  </div>
-                );
-              })
+                  <span className="home-pagination-info">
+                    Página {currentPage + 1} de {totalPages}
+                  </span>
+
+                  <button
+                    className="home-pagination-btn"
+                    disabled={currentPage >= totalPages - 1}
+                    onClick={() => setCurrentPage((prev) => prev + 1)}
+                  >
+                    →
+                  </button>
+                </div>
+              </>
             )}
           </div>
         </main>
