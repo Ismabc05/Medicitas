@@ -207,19 +207,26 @@ function Home() {
   };
 
   const nextAvailableTimeblock = timeblocks
-    .filter((tb) => !tb.appointments || tb.appointments.length === 0)
-    .sort((a, b) => new Date(a.startTime) - new Date(b.startTime))[0];
+    .filter((tb) => !tb.appointments || tb.appointments.length === 0) // filtra los horarios que estan libres de reserva
+    .sort((a, b) => new Date(a.startTime) - new Date(b.startTime))[0]; // los ordena desde el mas cercano al mas lejano y nos quedamos con el primero
 
   const nextAvailableText = nextAvailableTimeblock
-    ? new Date(nextAvailableTimeblock.startTime).toLocaleString("es-ES", {
-        weekday: "long",
-        day: "2-digit",
-        month: "long",
-        hour: "2-digit",
-        minute: "2-digit",
-        timeZone: "Europe/Madrid",
-      })
-    : "No hay disponibilidad";
+  ? (() => {
+      const text = new Date(nextAvailableTimeblock.startTime).toLocaleString(
+        "es-ES",
+        {
+          weekday: "long",
+          day: "2-digit",
+          month: "long",
+          hour: "2-digit",
+          minute: "2-digit",
+          timeZone: "Europe/Madrid",
+        }
+      );
+
+      return text.charAt(0).toUpperCase() + text.slice(1);
+    })()
+  : "No hay disponibilidad";
 
   return (
     <section className="home-page">
@@ -238,7 +245,7 @@ function Home() {
           ) : (
             <>
               <div className="home-avatar">
-                {user?.name?.charAt(0)?.toUpperCase() || "I"}
+                {user?.name?.charAt(0)?.toUpperCase() || "I"} {/* obtiene el nombre del usuario y chartAt coge la primera letra y la convierte en mayuscula */}
               </div>
 
               <div className="home-user-mini__info">
