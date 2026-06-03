@@ -44,33 +44,4 @@ const loginUser = async (email, password) => {
 
 }
 
-const editUser = async (id, data) => {
-  const user = await prisma.user.findUnique({
-    where: {
-      id: Number(id),
-    },
-  });
-
-  if (!user) {
-    throw new Error("Usuario no encontrado");
-  }
-
-  if (data.password) {
-    data.password = await bcrypt.hash(data.password, 10);
-  }
-
-  const updatedUser = await prisma.user.update({
-    where: {
-      id: Number(id),
-    },
-    data: {
-      ...(data.name && { name: data.name }),
-      ...(data.email && { email: data.email }),
-      ...(data.password && { password: data.password }),
-    },
-  });
-
-  return updatedUser;
-};
-
-module.exports = {registerUser, loginUser, editUser}
+module.exports = {registerUser, loginUser}

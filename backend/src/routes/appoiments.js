@@ -6,5 +6,6 @@ const router = Router()
 
 router.get("/:id/appoiment", authenticateToken, appoimentController.getUserAppoiment)
 router.get("/:id/user", authenticateToken, appoimentController.getUser)
+router.put("/edit-user/:id", appoimentController.editUser)
 
 module.exports = router

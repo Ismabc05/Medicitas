@@ -37,3 +37,18 @@ exports.getUser = async (req, res) => {
 
     }
 }
+
+exports.editUser = async (req, res) => {
+
+    try{
+
+        const { id } = req.params;
+        const { name, email, password } = req.body
+        const updated = await appoimentServices.editUser(id, {name, email, password})
+        return res.json(updated)
+
+    }catch (error){
+        return res.status(400).json({ error: error.message });
+    }
+
+}
