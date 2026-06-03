@@ -10,19 +10,32 @@ function Home() {
   const [errorReservation, setErrorReservation] = useState("");
   const [errorReservationCreate, setErrorReservationCreate] = useState("");
   const [errorReservationDelete, setErrorReservationDelete] = useState("");
+  const [errorEditUser, setErrorEditUser] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
   const navegar = useNavigate();
   const [currentPage, setCurrentPage] = useState(0); // guarda en la pagina en la que estas
   const itemsPerPage = 4;
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editField, setEditField] = useState("");
+  const [editValue, setEditValue] = useState("");
+  const [editUserId, setEditUserId] = useState(null);
 
   const totalPages = Math.ceil(timeblocks.length / itemsPerPage);
 
-  const visibleTimeblocks = timeblocks.slice( // vemos que timeblocks mostrar
+  const visibleTimeblocks = timeblocks.slice(
+    // vemos que timeblocks mostrar
     currentPage * itemsPerPage,
     (currentPage + 1) * itemsPerPage,
   );
+
+  const handleToEditUser = (id, field) => {
+    setEditUserId(id);
+    setEditField(field);
+    setEditValue("");
+    setEditModalOpen(true);
+  };
 
   useEffect(() => {
     const fetchTimeblocks = async () => {
@@ -152,6 +165,45 @@ function Home() {
     }
   };
 
+  const handleUpdateUser = async (e) => {
+    e.preventDefault();
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(
+        `https://curso-expressjs-production-a8af.up.railway.app/api/users/edit-user/${editUserId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            [editField]: editValue,
+          }),
+        },
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setErrorReservation(data.error || "Error al actualizar usuario");
+        return;
+      }
+
+      // actualizar estado usuario en frontend
+      setUser(data);
+
+      setSuccess("Usuario actualizado correctamente");
+
+      setEditModalOpen(false);
+      setEditValue("");
+    } catch (error) {
+      setErrorReservation("Error al conectar con el servidor");
+    }
+  };
+
   const handleToDeleteReservation = async (id) => {
     try {
       const token = localStorage.getItem("token");
@@ -265,17 +317,32 @@ function Home() {
             </>
           )}
 
-          <button className="home-user-mini__icon" aria-label="Cambiar nombre">
+          <button
+            className="home-user-mini__icon"
+            aria-label="Cambiar nombre"
+            onClick={() => {
+              handleToEditUser(user.id, "name");
+            }}
+          >
             ✎
           </button>
 
-          <button className="home-user-mini__icon" aria-label="Cambiar email">
+          <button
+            className="home-user-mini__icon"
+            aria-label="Cambiar email"
+            onClick={() => {
+              handleToEditUser(user.id, "email");
+            }}
+          >
             @
           </button>
 
           <button
             className="home-user-mini__icon"
             aria-label="Cambiar contraseña"
+            onClick={() => {
+              handleToEditUser(user.id, "password");
+            }}
           >
             🔒
           </button>
@@ -474,6 +541,34 @@ function Home() {
       {errorReservationDelete && (
         <div className="success-toast-error">
           <p className="success-toast__text">{errorReservationDelete}</p>
+        </div>
+      )}
+
+      {editModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h3>
+              Editar {editField === "name" && "nombre"}
+              {editField === "email" && "email"}
+              {editField === "password" && "contraseña"}
+            </h3>
+
+            <form onSubmit={handleUpdateUser}>
+              <input
+                type={editField === "password" ? "password" : "text"}
+                value={editValue}
+                onChange={(e) => setEditValue(e.target.value)}
+                placeholder="Escribe el nuevo valor"
+              />
+
+              <div className="modal-actions">
+                <button type="submit">Guardar</button>
+                <button type="button" onClick={() => setEditModalOpen(false)}>
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </section>

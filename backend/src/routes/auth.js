@@ -8,7 +8,7 @@ const router = Router()
 
 router.post("/register", register);
 router.post("/login", login)
-router.put("/edit-user", edit)
+router.put("/edit-user/:id", edit)
 
 router.get("/protected-route", authenticateToken, (req, res) => {
     res.send("Esta es una ruta protegida")
