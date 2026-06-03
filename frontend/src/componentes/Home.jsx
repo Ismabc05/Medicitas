@@ -14,12 +14,12 @@ function Home() {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
   const navegar = useNavigate();
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0); // guarda en la pagina en la que estas
   const itemsPerPage = 4;
 
   const totalPages = Math.ceil(timeblocks.length / itemsPerPage);
 
-  const visibleTimeblocks = timeblocks.slice(
+  const visibleTimeblocks = timeblocks.slice( // vemos que timeblocks mostrar
     currentPage * itemsPerPage,
     (currentPage + 1) * itemsPerPage,
   );
@@ -254,7 +254,7 @@ function Home() {
           ) : (
             <>
               <div className="home-avatar">
-                {user?.name?.charAt(0)?.toUpperCase() || "I"}{" "}
+                {user?.name?.charAt(0)?.toUpperCase() || ""}{" "}
                 {/* obtiene el nombre del usuario y chartAt coge la primera letra y la convierte en mayuscula */}
               </div>
 
@@ -380,7 +380,7 @@ function Home() {
                   <button
                     className="home-pagination-btn"
                     disabled={currentPage === 0}
-                    onClick={() => setCurrentPage((prev) => prev - 1)}
+                    onClick={() => setCurrentPage((prev) => prev - 1)} // si hacemos click actualizamos el estado a -1 para que nos muestre la pagina anterior
                   >
                     ←
                   </button>
@@ -392,7 +392,7 @@ function Home() {
                   <button
                     className="home-pagination-btn"
                     disabled={currentPage >= totalPages - 1}
-                    onClick={() => setCurrentPage((prev) => prev + 1)}
+                    onClick={() => setCurrentPage((prev) => prev + 1)} // si hacemos click actualizamos el estado a -1 para que nos muestre la pagina siguiente
                   >
                     →
                   </button>
