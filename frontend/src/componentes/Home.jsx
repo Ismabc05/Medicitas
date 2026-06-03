@@ -10,7 +10,7 @@ function Home() {
   const [errorReservation, setErrorReservation] = useState("");
   const [errorReservationCreate, setErrorReservationCreate] = useState("");
   const [errorReservationDelete, setErrorReservationDelete] = useState("");
-  const [errorEditUser, setErrorEditUser] = useState("");
+  const [editError, setEditError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
@@ -168,6 +168,15 @@ function Home() {
   const handleUpdateUser = async (e) => {
     e.preventDefault();
 
+    const error = validateEdit(editField, editValue);
+
+    if (error) {
+      setEditError(error);
+      return;
+    }
+
+    setEditError("");
+
     try {
       const token = localStorage.getItem("token");
 
@@ -196,6 +205,11 @@ function Home() {
       setUser(data);
 
       setSuccess("Usuario actualizado correctamente");
+
+      setTimeout(() => {
+        setSuccess("");
+        setErrorReservationDelete("");
+      }, 3000);
 
       setEditModalOpen(false);
       setEditValue("");
@@ -265,6 +279,27 @@ function Home() {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     navegar("/");
+  };
+
+  const validateEdit = (field, value) => {
+    if (!value.trim()) {
+      return "El campo no puede estar vacío";
+    }
+
+    if (field === "email") {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(value)) {
+        return "Email inválido";
+      }
+    }
+
+    if (field === "password") {
+      if (value.length < 6) {
+        return "La contraseña debe tener al menos 6 caracteres";
+      }
+    }
+
+    return "";
   };
 
   const nextAvailableTimeblock = timeblocks
@@ -560,6 +595,8 @@ function Home() {
                 onChange={(e) => setEditValue(e.target.value)}
                 placeholder="Escribe el nuevo valor"
               />
+
+              {editError && <p className="modal-error">{editError}</p>}
 
               <div className="modal-actions">
                 <button type="submit">Guardar</button>
