@@ -70,7 +70,7 @@ Cualquier feedback, sugerencia o mejora será más que bienvenida. ¡Siempre hay
 
 ## 👨‍💻 Autor
 
-Desarrollado por: **[Tu Nombre Aquí]**
+Desarrollado por: Ismael Bedmar Cejas
 
 ---
 
