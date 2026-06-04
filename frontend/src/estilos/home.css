@@ -734,6 +734,29 @@
     width: 38px;
     height: 38px;
   }
+
+    .home-user-mini {
+    padding: 7px 9px;
+    gap: 6px;
+    width: fit-content;
+  }
+
+  .home-user-mini__icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .home-user-mini__info strong {
+    font-size: 12px;
+  }
+
+  .home-user-mini__info p {
+    font-size: 11px;
+  }
+
+  .home-user-mini__info span {
+    font-size: 10px;
+  }
 }
 
 @media (max-width: 480px) {
