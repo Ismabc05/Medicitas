@@ -583,7 +583,7 @@ function Home() {
         <div className="modal-overlay">
           <div className="modal">
             <h3>
-              Editar {editField === "name" && "nombre"}
+              Edita tu {editField === "name" && "nombre"}
               {editField === "email" && "email"}
               {editField === "password" && "contraseña"}
             </h3>
@@ -593,7 +593,6 @@ function Home() {
                 type={editField === "password" ? "password" : "text"}
                 value={editValue}
                 onChange={(e) => setEditValue(e.target.value)}
-                placeholder="Escribe el nuevo valor"
               />
 
               {editError && <p className="modal-error">{editError}</p>}
