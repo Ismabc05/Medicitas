@@ -1,83 +1,255 @@
-# 🚀 Backend con ExpressJS
+# 🩺 Backend de Gestión de Citas Médicas
 
-Este repositorio contiene mis prácticas, ejercicios y proyectos desarrollados durante el curso de **Backend con ExpressJS** en Platzi.
+## 📋 Descripción
 
-## 📚 Lo aprendido
+Este proyecto es una API REST desarrollada con **Node.js** y **Express.js** para la gestión de citas médicas.
 
-Durante este curso aprendí a construir aplicaciones backend utilizando ExpressJS y Node.js, implementando buenas prácticas para el desarrollo de APIs modernas.
+Permite a los usuarios registrarse, iniciar sesión, reservar citas médicas, cancelar reservas y gestionar su perfil. Además, incluye funcionalidades de administración para la gestión de horarios disponibles.
 
-### Temas principales:
+El objetivo principal es proporcionar una solución sencilla y escalable para la organización de citas médicas mediante una arquitectura backend moderna.
 
-* ⚙️ Configuración de servidores con ExpressJS
-* 🌐 Creación de APIs REST
-* 🛣️ Manejo de rutas y controladores
-* 📦 Middlewares
-* 🔐 Manejo de errores
-* 📁 Organización profesional de proyectos backend
-* 🧠 Variables de entorno
-* 📡 Manejo de peticiones HTTP
-* 🗄️ Integración básica con bases de datos
-* 🚀 Arquitectura backend escalable
+---
 
-## 🧰 Tecnologías utilizadas
+# 🚀 Tecnologías utilizadas
 
-* JavaScript
-* Node.js
-* ExpressJS
-* npm
-* Nodemon
+## Node.js
 
-## 📂 Estructura del proyecto
+Entorno de ejecución de JavaScript que permite desarrollar aplicaciones backend rápidas y eficientes.
 
-```bash id="pt2x0z"
-📦 backend-expressjs
- ┣ 📂 src
- ┃ ┣ 📂 routes
- ┃ ┣ 📂 middlewares
- ┃ ┣ 📂 services
- ┃ ┣ 📂 controllers
- ┃ ┣ 📜 app.js
- ┃ ┗ 📜 server.js
- ┣ 📜 package.json
- ┗ 📜 README.md
+## Express.js
+
+Framework web para Node.js utilizado para la creación de rutas, controladores y gestión de peticiones HTTP.
+
+## Prisma ORM
+
+ORM moderno utilizado para interactuar con la base de datos mediante modelos y consultas tipadas.
+
+## PostgreSQL
+
+Base de datos relacional utilizada para almacenar usuarios, horarios y reservas.
+
+## JWT (JSON Web Tokens)
+
+Sistema de autenticación basado en tokens para proteger rutas privadas y verificar la identidad de los usuarios.
+
+## bcrypt
+
+Librería utilizada para el cifrado seguro de contraseñas antes de almacenarlas en la base de datos.
+
+## Railway
+
+Plataforma utilizada para el despliegue y alojamiento de la API.
+
+---
+
+# 🏗️ Arquitectura del proyecto
+
+El proyecto sigue una arquitectura por capas:
+
+```text
+src/
+│
+├── controllers/
+├── services/
+├── routes/
+├── middlewares/
+├── prisma/
+└── app.js
 ```
 
-## ▶️ Instalación
+### Controllers
 
-Clona este repositorio:
+Gestionan las peticiones HTTP y las respuestas.
 
-```bash id="k0q1nv"
-git clone https://github.com/Ismabc05/curso-expressjs.git
+### Services
+
+Contienen la lógica de negocio de la aplicación.
+
+### Routes
+
+Definen los endpoints disponibles en la API.
+
+### Middlewares
+
+Gestionan autenticación, validaciones y control de errores.
+
+### Prisma
+
+Configuración y modelos de la base de datos.
+
+---
+
+# 🔐 Funcionalidades principales
+
+## Usuarios
+
+* Registro de usuarios.
+* Inicio de sesión.
+* Autenticación mediante JWT.
+* Consulta de perfil.
+* Modificación de nombre.
+* Modificación de correo electrónico.
+* Cambio de contraseña.
+
+## Reservas
+
+* Crear reservas médicas.
+* Consultar reservas de un usuario.
+* Cancelar reservas.
+* Evitar reservas duplicadas en un mismo horario.
+
+## Horarios
+
+* Consulta de horarios disponibles.
+* Gestión de bloques horarios.
+* Identificación de horarios reservados y libres.
+
+---
+
+# 📡 Endpoints principales
+
+## Usuarios
+
+```http
+POST /api/users/register
 ```
 
-Instala las dependencias:
+Registrar un nuevo usuario.
 
-```bash id="5vwq8z"
+```http
+POST /api/users/login
+```
+
+Iniciar sesión.
+
+```http
+GET /api/users/:id/user
+```
+
+Obtener información de un usuario.
+
+```http
+PUT /api/users/edit-user/:id
+```
+
+Actualizar nombre, correo o contraseña.
+
+---
+
+## Reservas
+
+```http
+POST /api/reservations
+```
+
+Crear una reserva.
+
+```http
+DELETE /api/reservations/:id
+```
+
+Eliminar una reserva.
+
+---
+
+## Horarios
+
+```http
+GET /api/admin/time-blocks
+```
+
+Obtener todos los bloques horarios disponibles.
+
+---
+
+# 🔒 Seguridad
+
+La API implementa diversas medidas de seguridad:
+
+* Contraseñas cifradas con bcrypt.
+* Autenticación mediante JWT.
+* Protección de rutas privadas.
+* Validación de datos de entrada.
+* Gestión centralizada de errores.
+
+---
+
+# ⚙️ Instalación
+
+## Clonar el repositorio
+
+```bash
+git clone https://github.com/usuario/repositorio.git
+```
+
+## Instalar dependencias
+
+```bash
 npm install
 ```
 
-## 🚀 Scripts disponibles
+## Configurar variables de entorno
 
-Modo desarrollo:
+Crear un archivo `.env`:
 
-```bash id="6g5a0f"
+```env
+DATABASE_URL=
+JWT_SECRET=
+PORT=3000
+```
+
+## Ejecutar migraciones
+
+```bash
+npx prisma migrate dev
+```
+
+## Iniciar servidor
+
+```bash
 npm run dev
 ```
 
-Modo producción:
+---
 
-```bash id="7n4zj1"
-npm start
-```
+# 🗄️ Base de datos
 
-## 🎯 Objetivo
+La aplicación utiliza las siguientes entidades principales:
 
-Este proyecto tiene como objetivo fortalecer mis conocimientos en desarrollo backend y servir como base para futuras aplicaciones y APIs profesionales.
+### User
 
-## 👨‍💻 Autor
+* id
+* name
+* email
+* password
 
-Desarrollado por Ismael Bedmar
+### Appointment
 
-## 📌 Curso realizado en
+* id
+* date
+* userId
+* timeBlockId
 
-Platzi
+### TimeBlock
+
+* id
+* startTime
+* endTime
+
+---
+
+# 📈 Posibles mejoras futuras
+
+* Recuperación de contraseña mediante email.
+* Confirmación de reservas por correo electrónico.
+* Panel de administración avanzado.
+* Roles de usuario y administrador.
+* Historial de citas médicas.
+* Notificaciones en tiempo real.
+* Documentación automática con Swagger.
+
+---
+
+# 👨‍💻 Autor
+
+Desarrollado como proyecto de aprendizaje utilizando Node.js, Express.js, Prisma ORM y PostgreSQL para la gestión de citas médicas.

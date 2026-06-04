@@ -1,5 +1,5 @@
 const { PrismaClient } = require("../../../generated/prisma")
-const prisma = new PrismaClient(); // prisma client sirve para interactuar con la base de datos
+const prisma = new PrismaClient();
 
 const createTimeBlockService = async (startTime, endTime) => {
   const newStart = new Date(startTime);
