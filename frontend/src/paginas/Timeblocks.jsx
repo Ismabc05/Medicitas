@@ -155,14 +155,14 @@ function Timeblocks() {
         },
       );
 
+      const data = await response.json();
+
       if (!response.ok) {
-        setFormError("Error al editar el horario");
+        setFormError(data.error || "Error al editar el horario");
         return;
       }
 
-      const data = await response.json();
-
-      setSuccess("Horario creado con exito");
+      setSuccess("Horario editado con exito");
 
       setTimeout(() => {
         setSuccess("");
@@ -186,9 +186,23 @@ function Timeblocks() {
   };
 
   const handleStartEdit = (timeblock) => {
-    setIsEditing(true);
+    const isSameEdit = editingId === timeblock.id && isEditing;
 
+    // 👉 si ya estás editando el mismo, cerrar formulario
+    if (isSameEdit) {
+      setIsEditing(false);
+      setEditingId(null);
+      setShowForm(false);
+      setTimeBlockForm({
+        startTime: "",
+        endTime: "",
+      });
+      return;
+    }
+
+    setIsEditing(true);
     setEditingId(timeblock.id);
+    setShowForm(true);
 
     const formatDateForInput = (dateString) => {
       const date = new Date(dateString);
