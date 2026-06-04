@@ -364,45 +364,38 @@
   }
 }
 
-@media (max-width: 480px) {
-  .success-toast {
-    left: 16px;
-    right: 16px;
-    min-width: auto;
-    max-width: none;
-  }
-}
-
 @media (max-width: 1024px) {
   .cp-layout {
     grid-template-columns: 1fr;
   }
 
   .cp-sidebar {
-    flex-direction: row;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: center; /* 👈 clave */
     align-items: center;
-    flex-wrap: wrap;
+    gap: 16px;
+    padding: 18px 16px;
+  }
+
+  .cp-brand {
+    justify-content: center;
+    text-align: center;
   }
 
   .cp-nav {
     flex-direction: row;
+    justify-content: center; /* 👈 centra el menú */
+    align-items: center;
     flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .cp-nav-item {
+    text-align: center;
   }
 
   .cp-grid {
     grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 700px) {
-  .cp-main {
-    padding: 18px;
-  }
-
-  .cp-header {
-    flex-direction: column;
-    align-items: flex-start;
   }
 
   .cp-cards {
@@ -411,11 +404,100 @@
 }
 
 @media (max-width: 768px) {
-  .timeblock-form {
-    grid-template-columns: 1fr;
+  .cp-main {
+    padding: 16px;
   }
 
-  .timeblock-submit {
+  .cp-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .cp-header h1 {
+    font-size: 24px;
+  }
+
+  .cp-header p {
+    font-size: 14px;
+  }
+
+  .cp-header-actions {
     width: 100%;
+    flex-direction: column;
+  }
+
+  .cp-button,
+  .cp-button-session {
+    width: 100%;
+    text-align: center;
+  }
+
+  .cp-sidebar {
+    gap: 12px;
+  }
+
+  .cp-logo {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+
+  .cp-brand h2 {
+    font-size: 16px;
+  }
+
+  .cp-panel {
+    padding: 16px;
+  }
+
+  .reservation-card {
+    padding: 14px;
+  }
+
+  .cp-empty {
+    min-height: 140px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cp-header h1 {
+    font-size: 20px;
+  }
+
+  .cp-header p {
+    font-size: 13px;
+  }
+
+  .cp-card strong {
+    font-size: 22px;
+  }
+
+  .cp-panel-header h2 {
+    font-size: 18px;
+  }
+
+  .cp-nav-item {
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+
+  .reservation-card {
+    padding: 12px;
+  }
+
+  .reservation-card p {
+    font-size: 13px;
+  }
+
+  .cp-empty {
+    min-height: 120px;
+    padding: 12px;
+  }
+
+  .success-toast {
+    left: 12px;
+    right: 12px;
+    width: auto;
   }
 }

@@ -347,7 +347,9 @@
   color: #000;
 }
 
-
+/* =========================
+   TABLET (<= 1024px)
+========================= */
 @media (max-width: 1024px) {
   .tb-stats {
     grid-template-columns: 1fr;
@@ -361,5 +363,100 @@
   .tb-item {
     flex-direction: column;
     align-items: flex-start;
+  }
+}
+
+/* =========================
+   TABLET PEQUEÑA / MÓVIL GRANDE (<= 768px)
+========================= */
+@media (max-width: 768px) {
+  .tb-page {
+    gap: 16px;
+  }
+
+  .tb-header h1 {
+    font-size: 26px;
+  }
+
+  .tb-header p {
+    font-size: 14px;
+  }
+
+  .tb-button {
+    width: 100%;
+    text-align: center;
+  }
+
+  .tb-stats {
+    gap: 12px;
+  }
+
+  .tb-stat-card strong {
+    font-size: 24px;
+  }
+
+  .tb-time-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .tb-time-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .timeblock-form {
+    grid-template-columns: 1fr;
+  }
+
+  .timeblock-submit {
+    width: 100%;
+  }
+}
+
+/* =========================
+   MÓVIL (<= 480px)
+========================= */
+@media (max-width: 480px) {
+  .tb-header h1 {
+    font-size: 22px;
+  }
+
+  .tb-panel {
+    padding: 14px;
+  }
+
+  .tb-time-card {
+    padding: 14px;
+  }
+
+  .tb-time-label {
+    font-size: 11px;
+  }
+
+  .tb-time-value {
+    font-size: 13px;
+    word-break: break-word;
+  }
+
+  .tb-mini-btn {
+    width: 100%;
+  }
+
+  .tb-time-actions {
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .tb-reserved-text {
+    text-align: left;
+  }
+
+  .success-toast {
+    right: 12px;
+    left: 12px;
+    width: auto;
   }
 }

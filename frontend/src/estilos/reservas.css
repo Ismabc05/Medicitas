@@ -130,7 +130,9 @@
   box-sizing: border-box;
 }
 
-
+/* =========================
+   TABLET (<= 1024px)
+========================= */
 @media (max-width: 1024px) {
   .res-stats,
   .res-content {
@@ -140,5 +142,89 @@
   .res-header {
     flex-direction: column;
     align-items: flex-start;
+  }
+}
+
+/* =========================
+   TABLET PEQUEÑA / MÓVIL GRANDE (<= 768px)
+========================= */
+@media (max-width: 768px) {
+  .res-page {
+    gap: 16px;
+  }
+
+  .res-header h1 {
+    font-size: 26px;
+  }
+
+  .res-header p {
+    font-size: 14px;
+  }
+
+  .res-header-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .res-button {
+    width: 100%;
+    text-align: center;
+  }
+
+  .res-stats {
+    gap: 12px;
+  }
+
+  .res-stat-card strong {
+    font-size: 24px;
+  }
+
+  .res-panel {
+    padding: 16px;
+  }
+
+  .reservation-card {
+    padding: 14px;
+  }
+
+  .res-list {
+    padding: 12px;
+  }
+}
+
+/* =========================
+   MÓVIL (<= 480px)
+========================= */
+@media (max-width: 480px) {
+  .res-header h1 {
+    font-size: 22px;
+  }
+
+  .res-panel-header h2 {
+    font-size: 18px;
+  }
+
+  .res-stat-card strong {
+    font-size: 22px;
+  }
+
+  .res-chip {
+    font-size: 11px;
+    padding: 5px 8px;
+  }
+
+  .reservation-card {
+    padding: 12px;
+    border-left-width: 3px;
+  }
+
+  .res-list {
+    min-height: 140px;
+  }
+
+  .res-empty-state {
+    min-height: 180px;
+    padding: 20px;
+    text-align: center;
   }
 }

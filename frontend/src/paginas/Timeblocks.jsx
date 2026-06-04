@@ -122,7 +122,7 @@ function Timeblocks() {
         return;
       }
 
-      setSuccess("Timeblock borrado con éxito");
+      setSuccess("Horario borrado con éxito");
 
       setTimeout(() => {
         setSuccess("");
