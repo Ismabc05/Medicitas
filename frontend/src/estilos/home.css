@@ -626,12 +626,18 @@
 
   .home-user-mini {
     flex-direction: row;
-    justify-content: center;
+    justify-content: flex-start;
+    align-items: center;
+
     width: 100%;
+    margin: 0 auto;
+
+    gap: 12px;
   }
 }
 
 @media (max-width: 768px) {
+
   .home-page {
     padding: 18px;
   }
@@ -679,7 +685,7 @@
   }
 
   /* =========================
-     CENTRADO CARDS
+     CARDS CENTRADOS
   ========================= */
 
   .home-time-card,
@@ -735,31 +741,70 @@
     height: 38px;
   }
 
-    .home-user-mini {
-    padding: 7px 9px;
-    gap: 6px;
-    width: fit-content;
+  /* =========================
+     USER MINI (FIX PRO)
+  ========================= */
+
+  .home-user-mini {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+
+    padding: 10px 12px;
+    gap: 12px;
+
+    box-sizing: border-box;
   }
 
   .home-user-mini__icon {
-    width: 30px;
-    height: 30px;
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px; /* 🔥 evita que se deforme o invada espacio */
+  }
+
+  .home-user-mini__info {
+    display: flex;
+    flex-direction: column;
+
+    flex: 1;
+    min-width: 0; /* 🔥 clave para evitar overflow */
+
+    overflow: hidden;
   }
 
   .home-user-mini__info strong {
-    font-size: 12px;
+    font-size: 13px;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .home-user-mini__info p {
     font-size: 11px;
+    margin: 0;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .home-user-mini__info span {
     font-size: 10px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
 @media (max-width: 480px) {
+
   .home-brand h1 {
     font-size: 24px;
   }
@@ -798,5 +843,22 @@
 
   .modal-actions button {
     width: 100%;
+  }
+
+  /* USER MINI MOBILE SMALL */
+  .home-user-mini {
+    max-width: 100%;
+    padding: 8px 10px;
+    gap: 10px;
+  }
+
+  .home-user-mini__icon {
+    width: 32px;
+    height: 32px;
+    flex: 0 0 32px;
+  }
+
+  .home-user-mini__info strong {
+    font-size: 12px;
   }
 }
