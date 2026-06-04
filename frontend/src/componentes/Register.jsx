@@ -102,7 +102,7 @@ export default function Register() {
 
         <form className="register-form" onSubmit={handleSubmit}>
           <div className="register-field">
-            <label htmlFor="name">Nombre completo:</label>
+            <label htmlFor="name">Nombre:</label>
             <input
               id="name"
               type="text"
