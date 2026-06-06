@@ -33,7 +33,15 @@ function Home() {
   const handleToEditUser = (id, field) => {
     setEditUserId(id);
     setEditField(field);
-    setEditValue("");
+
+    if (field === "name") {
+      setEditValue(user?.name || "");
+    } else if (field === "email") {
+      setEditValue(user?.email || "");
+    } else {
+      setEditValue("");
+    }
+
     setEditModalOpen(true);
   };
 
