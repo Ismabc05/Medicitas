@@ -176,6 +176,20 @@ function Home() {
   const handleUpdateUser = async (e) => {
     e.preventDefault();
 
+    if (
+      (editField === "name" && editValue.trim() === user.name.trim()) ||
+      (editField === "email" &&
+        editValue.trim().toLowerCase() === user.email.toLowerCase())
+    ) {
+      setEditError("El nuevo valor es igual al actual.");
+
+      setTimeout(() => {
+        setEditError("");
+      }, 3000);
+
+      return;
+    }
+
     const error = validateEdit(editField, editValue);
 
     if (error) {
