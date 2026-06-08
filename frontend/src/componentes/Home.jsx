@@ -18,9 +18,12 @@ function Home() {
   const [currentPage, setCurrentPage] = useState(0); // guarda en la pagina en la que estas
   const itemsPerPage = 4;
   const [editModalOpen, setEditModalOpen] = useState(false);
+  const [closeModelOpen, setCloseModalOpen] = useState(false);
+  const [reservationModalOpen, setReservationModalOpen] = useState(false);
   const [editField, setEditField] = useState("");
   const [editValue, setEditValue] = useState("");
   const [editUserId, setEditUserId] = useState(null);
+  const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
 
   const totalPages = Math.ceil(timeblocks.length / itemsPerPage);
 
@@ -181,11 +184,11 @@ function Home() {
       (editField === "email" &&
         editValue.trim().toLowerCase() === user.email.toLowerCase())
     ) {
-      setEditError("El nuevo valor es igual al actual.");
+      setEditError("No has realizado ningun cambio.");
 
       setTimeout(() => {
         setEditError("");
-      }, 3000);
+      }, 2000);
 
       return;
     }
@@ -194,10 +197,13 @@ function Home() {
 
     if (error) {
       setEditError(error);
+
+      setTimeout(() => {
+        setEditError("");
+      }, 2000);
+
       return;
     }
-
-    setEditError("");
 
     try {
       const token = localStorage.getItem("token");
@@ -291,6 +297,9 @@ function Home() {
             : tb,
         ),
       );
+
+      setReservationModalOpen(false);
+      setSelectedAppointmentId(null);
     } catch (error) {
       setErrorReservationDelete("Error al eliminar la reserva");
     }
@@ -407,7 +416,7 @@ function Home() {
           <button
             className="home-user-mini__icon danger"
             aria-label="Cerrar sesión"
-            onClick={handleToCloseSession}
+            onClick={() => setCloseModalOpen(!closeModelOpen)}
           >
             <AiOutlineCloseCircle />
           </button>
@@ -563,7 +572,8 @@ function Home() {
                       className="home-icon-btn danger"
                       aria-label="Eliminar reserva"
                       onClick={() => {
-                        handleToDeleteReservation(appointment.id);
+                        setSelectedAppointmentId(appointment.id);
+                        setReservationModalOpen(true);
                       }}
                     >
                       <AiOutlineCloseCircle />
@@ -626,6 +636,54 @@ function Home() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {closeModelOpen && (
+        <div className="modal-overlay" onClick={() => setCloseModalOpen(false)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <h3>¿Seguro que quieres cerrar sesión?</h3>
+            <p>
+              Se cerrará tu sesión actual y tendrás que volver a iniciar sesión.
+            </p>
+
+            <div className="modal-actions">
+              <button className="btn btn-danger" onClick={handleToCloseSession}>
+                Aceptar
+              </button>
+              <button
+                className="btn btn-secondary"
+                onClick={() => setCloseModalOpen(false)}
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {reservationModalOpen && (
+        <div className="modal-overlay" onClick={() => setCloseModalOpen(false)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <h3 className="h3-font">¿Seguro que quieres eliminar esta reserva?</h3>
+
+            <div className="modal-actions">
+              <button
+                className="btn btn-danger"
+                onClick={() => {
+                  handleToDeleteReservation(selectedAppointmentId);
+                }}
+              >
+                Aceptar
+              </button>
+              <button
+                className="btn btn-secondary"
+                onClick={() => setReservationModalOpen(false)}
+              >
+                Cancelar
+              </button>
+            </div>
           </div>
         </div>
       )}
