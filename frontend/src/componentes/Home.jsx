@@ -666,7 +666,7 @@ function Home() {
       {reservationModalOpen && (
         <div className="modal-overlay" onClick={() => setCloseModalOpen(false)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <h3 className="h3-font">¿Seguro que quieres eliminar esta reserva?</h3>
+            <h3 className="modal-text-small">¿Seguro que quieres eliminar esta reserva?</h3>
 
             <div className="modal-actions">
               <button
