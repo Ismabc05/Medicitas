@@ -15,6 +15,7 @@ function Controlpanel() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [formError, setFormError] = useState("");
+  const [openModal, setOpenModdal] = useState(false)
 
   useEffect(() => {
     // usamos useEffect para los fetch ya que react debe renderizar la UI rapido y los fetch pueden tardar ya que vienen de sitios externos
@@ -166,7 +167,7 @@ function Controlpanel() {
           <button className="cp-button" onClick={() => setShowForm(!showForm)}>
             + Nuevo Horario{" "}
           </button>
-          <button className="cp-button-session" onClick={handleToCloseSession}>
+          <button className="cp-button-session" onClick={() => {setOpenModdal(!openModal)}}>
             Cerrar Sesion
           </button>
         </div>
@@ -313,6 +314,29 @@ function Controlpanel() {
           </div>
         )}
       </section>
+
+      {openModal && (
+        <div className="modal-overlay" onClick={() => setOpenModdal(false)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <h3>¿Seguro que quieres cerrar sesión?</h3>
+            <p>
+              Se cerrará tu sesión actual y tendrás que volver a iniciar sesión.
+            </p>
+
+            <div className="modal-actions">
+              <button className="btn btn-danger" onClick={handleToCloseSession}>
+                Aceptar
+              </button>
+              <button
+                className="btn btn-secondary"
+                onClick={() => setOpenModdal(false)}
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
