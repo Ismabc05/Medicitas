@@ -1,10 +1,10 @@
 import { Routes, Route } from "react-router-dom";
-import { Login } from "./componentes/Login";
+import Login from "./componentes/Login.jsx";
 import { Home } from "./componentes/Home";
-import { Controlpanel } from "./paginas/Controlpanel";
-import { Register } from "./componentes/Register";
+import { Controlpanel }  from "./paginas/Controlpanel";
+import  Register  from "./componentes/Register";
 import { AdminLayout } from "./layouts/AdminLayout";
-import { Timeblocks } from "./paginas/Timeblocks";
+import { Timeblocks }  from "./paginas/Timeblocks";
 import { Reservas } from "./paginas/Reservas";
 
 function App() {

@@ -3,12 +3,15 @@ import "../estilos/login.css";
 import { useNavigate } from "react-router-dom";
 import { validateLogin } from "../utils/validateLogin";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { loginUser } from "../services/auth-services";
 
 export default function Login() {
   const navegar = useNavigate();
+
   const [error, setError] = useState("");
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -52,29 +55,9 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const response = await fetch(
-        "https://curso-expressjs-production-a8af.up.railway.app/api/auth/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: form.email,
-            password: form.password,
-          }),
-        },
-      );
+      const data = await loginUser(form.email, form.password);
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(data.error || "Usuario o contraseña incorrectos");
-        setLoading(false);
-        return;
-      }
-
-      localStorage.setItem("token", data.token); // guardamos en localstorage el token ya que lo vamos a necesitar en las demas rutas para poder acceder a ellas
+      localStorage.setItem("token", data.token);
 
       setTimeout(() => {
         if (data.user.role === "USER") {
@@ -84,9 +67,8 @@ export default function Login() {
         }
         setLoading(false);
       }, 2000);
-      
-    } catch (error) {
-      setError("Error de conexion con el servidor");
+    } catch (err) {
+      setError(err.message);
       setLoading(false);
     }
   };
@@ -140,7 +122,9 @@ export default function Login() {
               </button>
             </div>
 
-            {errors.password && <p className="error-text">{errors.password}</p>}
+            {errors.password && (
+              <p className="error-text">{errors.password}</p>
+            )}
           </div>
 
           <button type="submit" className="login-button" disabled={loading}>
@@ -160,5 +144,3 @@ export default function Login() {
     </div>
   );
 }
-
-export { Login };

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "../estilos/register.css";
 import { useNavigate } from "react-router-dom";
 import { validateRegister } from "../utils/validateRegister";
+import { registerUser } from "../services/auth-services";
 
 export default function Register() {
   const navegar = useNavigate();
@@ -56,30 +57,11 @@ export default function Register() {
     setLoading(true);
 
     try {
-      const response = await fetch(
-        // hacemos la peticion
-        "https://curso-expressjs-production-a8af.up.railway.app/api/auth/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            // le enviamos como cuerpo el estado donde guardamos los valores del input
-            name: form.name,
-            email: form.email,
-            password: form.password,
-          }),
-        },
-      );
-
-      const data = await response.json(); // en data guardamos la respuesta del servidor
-
-      if (!response.ok) {
-        setError(data.error || "Error al registrar usuario.");
-        setLoading(false);
-        return;
-      }
+      await registerUser({
+        name: form.name,
+        email: form.email,
+        password: form.password,
+      });
 
       setSuccess("Usuario creado correctamente.");
 
@@ -88,7 +70,7 @@ export default function Register() {
         navegar("/");
       }, 2000);
     } catch (err) {
-      setError("Error de conexión con el servidor.");
+      setError(err.message);
       setLoading(false);
     }
   };
