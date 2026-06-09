@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import "../estilos/home.css";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { jwtDecode } from "jwt-decode";
@@ -24,6 +24,24 @@ function Home() {
   const [editValue, setEditValue] = useState("");
   const [editUserId, setEditUserId] = useState(null);
   const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+
+  const year = currentMonth.getFullYear();
+  const month = currentMonth.getMonth();
+
+  const daysOfMonth = useMemo(() => {
+    const year = currentMonth.getFullYear();
+    const month = currentMonth.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const startGrid = new Date(firstDay);
+    startGrid.setDate(firstDay.getDate() - firstDay.getDay());
+
+    return Array.from({ length: 42 }, (_, i) => {
+      const date = new Date(startGrid);
+      date.setDate(startGrid.getDate() + i);
+      return date;
+    });
+  }, [currentMonth]);
 
   const totalPages = Math.ceil(timeblocks.length / itemsPerPage);
 
@@ -441,97 +459,87 @@ function Home() {
       <section className="home-layout">
         {/* HORARIOS DISPONIBLES */}
         <main className="home-panel home-schedule">
-          <div className="home-panel__header">
-            <div>
-              <h2>Horarios disponibles</h2>
-              <p>Selecciona una franja para reservar.</p>
-            </div>
-          </div>
-
-          <div className="home-list">
-            {loading ? (
-              <p className="texto-cargando">Cargando horarios...</p>
-            ) : errorTimeblock ? (
-              <p>{errorTimeblock}</p>
-            ) : timeblocks.length === 0 ? (
-              <div className="home-empty">
-                <p className="texto-error">No hay horarios disponibles.</p>
-              </div>
-            ) : (
-              <>
-                {visibleTimeblocks.map((timeblock) => {
-                  const reservado = timeblock.appointments?.length > 0;
-
-                  return (
-                    <div key={timeblock.id} className="home-time-card">
-                      <div className="home-time-card__content">
-                        <div className="home-time-row">
-                          <span className="home-time-label">Inicio</span>
-                          <strong>
-                            {new Date(timeblock.startTime).toLocaleString(
-                              "es-ES",
-                              {
-                                timeZone: "Europe/Madrid",
-                              },
-                            )}
-                          </strong>
-                        </div>
-
-                        <div className="home-time-row">
-                          <span className="home-time-label">Fin</span>
-                          <strong>
-                            {new Date(timeblock.endTime).toLocaleString(
-                              "es-ES",
-                              {
-                                timeZone: "Europe/Madrid",
-                              },
-                            )}
-                          </strong>
-                        </div>
-                      </div>
-
-                      <p
-                        className={`tb-reserved-text ${reservado ? "active" : "empty"}`}
-                      >
-                        {reservado ? "Horario reservado" : "Disponible"}
-                      </p>
-
-                      <button
-                        className="home-action primary"
-                        disabled={reservado}
-                        onClick={() => {
-                          handleToReservation(timeblock.id, user.id);
-                        }}
-                      >
-                        Reservar
-                      </button>
-                    </div>
-                  );
+          <div className="mini-calendar">
+            <div className="mini-calendar__header">
+              <button
+                onClick={() => setCurrentMonth(new Date(year, month - 1, 1))}
+              >
+                ←
+              </button>
+              <strong>
+                {currentMonth.toLocaleDateString("es-ES", {
+                  month: "long",
+                  year: "numeric",
                 })}
+              </strong>
+              <button
+                onClick={() => setCurrentMonth(new Date(year, month + 1, 1))}
+              >
+                →
+              </button>
+            </div>
 
-                <div className="home-pagination">
-                  <button
-                    className="home-pagination-btn"
-                    disabled={currentPage === 0}
-                    onClick={() => setCurrentPage((prev) => prev - 1)} // si hacemos click actualizamos el estado a -1 para que nos muestre la pagina anterior
+            <div className="mini-calendar__weekdays">
+              {["L", "M", "X", "J", "V", "S", "D"].map((d) => (
+                <span key={d}>{d}</span>
+              ))}
+            </div>
+
+            <div className="mini-calendar__grid">
+              {daysOfMonth.map((day) => {
+                const dayBlocks = timeblocks.filter(
+                  (tb) =>
+                    new Date(tb.startTime).toDateString() ===
+                    day.toDateString(),
+                );
+
+                const availableBlocks = dayBlocks.filter(
+                  (tb) => !tb.appointments || tb.appointments.length === 0,
+                );
+
+                const isCurrentMonth =
+                  day.getMonth() === currentMonth.getMonth();
+
+                return (
+                  <div
+                    key={day.toISOString()}
+                    className={`mini-calendar__day ${isCurrentMonth ? "" : "out-month"} ${
+                      availableBlocks.length > 0 ? "available" : ""
+                    }`}
                   >
-                    ←
-                  </button>
+                    <span className="mini-calendar__day-number">
+                      {day.getDate()}
+                    </span>
 
-                  <span className="home-pagination-info">
-                    Página {currentPage + 1} de {totalPages}
-                  </span>
-
-                  <button
-                    className="home-pagination-btn"
-                    disabled={currentPage >= totalPages - 1}
-                    onClick={() => setCurrentPage((prev) => prev + 1)} // si hacemos click actualizamos el estado a -1 para que nos muestre la pagina siguiente
-                  >
-                    →
-                  </button>
-                </div>
-              </>
-            )}
+                    <div className="mini-calendar__slots">
+                      {availableBlocks.length > 0 ? (
+                        availableBlocks.map((tb) => (
+                          <button
+                            key={tb.id}
+                            className="mini-calendar__slot"
+                            onClick={() => handleToReservation(tb.id, user.id)}
+                            disabled={!user}
+                          >
+                            {new Date(tb.startTime).toLocaleTimeString(
+                              "es-ES",
+                              {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                timeZone: "Europe/Madrid",
+                              },
+                            )}
+                          </button>
+                        ))
+                      ) : (
+                        <small className="mini-calendar__no-slots">
+                          Sin huecos
+                        </small>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </main>
 
@@ -666,7 +674,9 @@ function Home() {
       {reservationModalOpen && (
         <div className="modal-overlay" onClick={() => setCloseModalOpen(false)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <h3 className="modal-text-small">¿Seguro que quieres eliminar esta reserva?</h3>
+            <h3 className="modal-text-small">
+              ¿Seguro que quieres eliminar esta reserva?
+            </h3>
 
             <div className="modal-actions">
               <button
