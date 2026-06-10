@@ -815,6 +815,14 @@
   .mini-calendar__grid .mini-calendar__day:nth-child(7) {
     display: none;
   }
+
+  .mini-calendar__slot {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+  }
 }
 
 @media (max-width: 480px) {

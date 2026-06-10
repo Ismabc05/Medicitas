@@ -7,7 +7,6 @@ import { loginUser } from "../services/auth-services";
 
 export default function Login() {
   const navegar = useNavigate();
-
   const [error, setError] = useState("");
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
