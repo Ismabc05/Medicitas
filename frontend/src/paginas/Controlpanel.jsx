@@ -24,7 +24,7 @@ function Controlpanel() {
         const token = localStorage.getItem("token");
 
         const response = await fetch(
-          "https://curso-expressjs-production-a8af.up.railway.app/api/admin/reservations",
+          "https://medicitas-production.up.railway.app/api/admin/reservations",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -56,7 +56,7 @@ function Controlpanel() {
         const token = localStorage.getItem("token");
 
         const response = await fetch(
-          "https://curso-expressjs-production-a8af.up.railway.app/api/admin/time-blocks",
+          "https://medicitas-production.up.railway.app/api/admin/time-blocks",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -113,7 +113,7 @@ function Controlpanel() {
       };
 
       const response = await fetch(
-        "https://curso-expressjs-production-a8af.up.railway.app/api/admin/create-time-blocks",
+        "https://medicitas-production.up.railway.app/api/admin/create-time-blocks",
         {
           method: "POST",
           headers: {

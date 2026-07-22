@@ -14,7 +14,7 @@ function Reservas() {
         const token = localStorage.getItem("token");
 
         const response = await fetch(
-          "https://curso-expressjs-production-a8af.up.railway.app/api/admin/reservations",
+          "https://medicitas-production.up.railway.app/api/admin/reservations",
           {
             headers: {
               Authorization: `Bearer ${token}`,

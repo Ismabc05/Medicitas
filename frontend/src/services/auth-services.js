@@ -1,5 +1,5 @@
 const API_URL =
-  "https://curso-expressjs-production-a8af.up.railway.app/api";
+  "https://medicitas-production.up.railway.app/api";
 
 export const loginUser = async (email, password) => {
   const response = await fetch(`${API_URL}/auth/login`, {

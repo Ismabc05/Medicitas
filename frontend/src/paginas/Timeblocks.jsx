@@ -21,7 +21,7 @@ function Timeblocks() {
       try {
         const token = localStorage.getItem("token");
         const response = await fetch(
-          "https://curso-expressjs-production-a8af.up.railway.app/api/admin/time-blocks",
+          "https://medicitas-production.up.railway.app/api/admin/time-blocks",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -67,7 +67,7 @@ function Timeblocks() {
       };
 
       const response = await fetch(
-        "https://curso-expressjs-production-a8af.up.railway.app/api/admin/create-time-blocks",
+        "https://medicitas-production.up.railway.app/api/admin/create-time-blocks",
         {
           method: "POST",
           headers: {
@@ -107,7 +107,7 @@ function Timeblocks() {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        `https://curso-expressjs-production-a8af.up.railway.app/api/admin/delete-time-blocks/${id}`,
+        `https://medicitas-production.up.railway.app/api/admin/delete-time-blocks/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -141,7 +141,7 @@ function Timeblocks() {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        `https://curso-expressjs-production-a8af.up.railway.app/api/admin/update-time-blocks/${id}`,
+        `https://medicitas-production.up.railway.app/api/admin/update-time-blocks/${id}`,
         {
           method: "PUT",
           headers: {

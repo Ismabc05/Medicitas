@@ -72,7 +72,7 @@ function Home() {
         const token = localStorage.getItem("token");
 
         const response = await fetch(
-          "https://curso-expressjs-production-a8af.up.railway.app/api/admin/time-blocks",
+          "https://medicitas-production.up.railway.app/api/admin/time-blocks",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -112,7 +112,7 @@ function Home() {
         const id = decoded.id;
 
         const response = await fetch(
-          `https://curso-expressjs-production-a8af.up.railway.app/api/users/${id}/user`,
+          `https://medicitas-production.up.railway.app/api/users/${id}/user`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -143,7 +143,7 @@ function Home() {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        "https://curso-expressjs-production-a8af.up.railway.app/api/reservations/",
+        "https://medicitas-production.up.railway.app/api/reservations/",
         {
           method: "POST",
           headers: {
@@ -227,7 +227,7 @@ function Home() {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        `https://curso-expressjs-production-a8af.up.railway.app/api/users/edit-user/${editUserId}`,
+        `https://medicitas-production.up.railway.app/api/users/edit-user/${editUserId}`,
         {
           method: "PUT",
           headers: {
@@ -275,7 +275,7 @@ function Home() {
       const timeBlockId = appointmentToDelete.timeBlockId;
 
       const response = await fetch(
-        `https://curso-expressjs-production-a8af.up.railway.app/api/reservations/${id}`,
+        `https://medicitas-production.up.railway.app/api/reservations/${id}`,
         {
           method: "DELETE",
           headers: {
